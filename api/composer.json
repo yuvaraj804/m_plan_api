@@ -1,0 +1,15 @@
+{
+    "name": "welcomeminer/m_plan_api",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Entity\\": "src/Entity"
+        }
+    },
+    "require": {
+        "doctrine/orm": "2.20",
+        "symfony/cache": "^6.0",
+        "psr/cache": "^3.0"
+    }
+}

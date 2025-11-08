@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+
+<html >
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    type="text/css"
+  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link href="./css/style.css" rel="stylesheet" type="text/css" />
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
+</head>
+  <body>
+  <div class="main_header d-flex justify-content-between">
+  <div class="headerLeft">
+    <div class="menuIcon menuwrap">
+      <i id="menuIcon" class="fa fa-bars" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas"></i>
+    </div>
+    <div class="brand-copyright">
+      <span class="mobile_view">
+        <a href="http://www.minervasoft.net" class="minerva_brand" target="_blank">Minerva Soft</a>
+      </span>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end align-items-center gap-2">
+    <span class="welcomeTxt"></span>
+    <i class="fas fa-arrow-right-from-bracket"></i>
+  </div>
+
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
+    <div class="offcanvas-header text-white shadow-sm">
+      <h5 class="offcanvas-title d-flex align-items-center" id="offcanvasLabel">
+        <i class="fas fa-cogs me-2"></i> MINT
+      </h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+  
+    <div class="offcanvas-body bg-light">
+      <ul class="menu-list list-unstyled mb-0">
+  
+        <li class="menu-item mb-1">
+          <a href="./" class="menu-link">
+            <i class="fas fa-home me-2"></i> Home
+          </a>
+        </li>
+  
+        <li class="menu-section mt-3 mb-1">Maintenance</li>
+        <li class="menu-item">
+          <a href="mp_form.html" class="menu-link"><i class="fas fa-wrench me-2"></i> Maintenance Plan</a>
+        </li>
+        <li class="menu-item">
+          <a href="mp_request.html" class="menu-link"><i class="fas fa-exclamation-circle me-2"></i> Complaint</a>
+        </li>
+  
+        <li class="menu-section mt-3 mb-1">Reports</li>
+        <li class="menu-item">
+          <a href="mplan_report.html" class="menu-link"><i class="fas fa-file-contract me-2"></i> Maintenance Report</a>
+        </li>
+        <li class="menu-item">
+          <a href="mp_request_report.html" class="menu-link"><i class="fas fa-file-alt me-2"></i> Complaint Report</a>
+        </li>
+        <li class="menu-item">
+          <a href="wo_order_report.html" class="menu-link"><i class="fas fa-file-invoice me-2"></i> Work Order Report</a>
+        </li>
+  
+      </ul>
+    </div>
+  </div>
+</div>
+    <div class="container formContainer">
+      <div class="w-100 d-flex justify-content-between align-items-center mb-3">
+        <p class="page-title m-0">Maintenance Complaint</p>
+        <a class="text-decoration-none fw-bold" target="_blank" href="mp_request_report.html">View Report</a>
+    </div>
+      <div id="alert-message" class="alert">
+        <div id="alert-msg"></div>
+      </div>
+      <i class="fas fa-comment-dots" id="show-last-error" title="View Last Error" ></i>
+
+        <div class="card bg-light text-dark shadow">
+          <div class="card-body">
+            <form id="maintenanceRequestForm" enctype="multipart/form-data" method="post">
+              <!-- Request ID -->
+              <div class="row inputWrap">
+                <label for="request_id" class="col-12 col-sm-4 col-form-label">
+                  <i class="fa-solid fa-id-card"></i> Request ID
+                </label>
+                <div class="col-12 col-sm-8">
+                  <div class="input-group">
+                    <span class="input-group-text iconWrap">
+                      <i class="fa-solid fa-hashtag"></i>
+                    </span>
+                    <input 
+                      type="text"
+                      class="form-control textFieldSmall"
+                      id="request_id"
+                      name="request_id"
+                      value=""
+                      readonly
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Request Date -->
+              <div class="row inputWrap">
+                <label for="request_date" class="col-12 col-sm-4 col-form-label">
+                  <i class="fa-regular fa-calendar"></i> Request Date
+                </label>
+                <div class="col-12 col-sm-8">
+                  <div class="input-group">
+                    <span class="input-group-text iconWrap">
+                      <i class="fa fa-calendar-days"></i>
+                    </span>
+                    <input
+                      type="date"
+                      class="form-control textFieldSmall" readonly
+                      id="request_date" 
+                      name="request_date"
+                      value=""
+                      
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Requested By -->
+              <div class="row inputWrap">
+                <label for="request_by" class="col-12 col-sm-4 col-form-label">
+                  <i class="fa-solid fa-user"></i> Requested By
+                </label>
+                <div class="col-12 col-sm-8">
+                  <div class="input-group">
+                    <span class="input-group-text iconWrap">
+                      <i class="fa-solid fa-user-tie"></i>
+                    </span>
+                    <input
+                      type="text"
+                      class="form-control textFieldMedium"
+                      id="request_by"
+                      autocomplete="off"
+                      placeholder="Request By"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- ================================= -->
+            <!-- Branch Code -->
+            <div class="row inputWrap">
+                <label for="branch_code" class="col-12 col-sm-4 col-form-label"
+                  >Branch Code</label
+                >
+                <div class="col-12 col-sm-8">
+                  <div class="input-group">
+                    <span class="input-group-text iconWrap"
+                      ><i class="fas fa-code-branch"></i></span
+                    >
+                    <select class="form-select selectp textFieldMedium" required id="branch_code" name="branch_code" 
+                    >
+                      <option class="option" disabled selected>--Select--</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Production Stage -->
+              <div id="prodStage" class="row inputWrap d-none">
+                <label for="ps_code" class="col-12 col-sm-4 col-form-label"
+                  >Production Stage</label
+                >
+                <div class="col-12 col-sm-8">
+                  <div class="input-group">
+                    <span class="input-group-text iconWrap"
+                      ><i class="fa-solid fa-city"></i></span>
+                    <select
+                    class="form-select textFieldMedium" required
+                    id="ps_code" name="ps_code"
+                  >
+                    <option disabled selected>--Select--</option>
+                  </select>
+                  </div>
+                </div>
+              </div>
+             
+              <!-- Equipment Code -->
+              <div class="row inputWrap">
+                <label for="equ-code" class="col-sm-4 col-form-label"
+                  >Equipment Code</label
+                >
+                <div class="col-sm-8">
+                  <div class="input-group">
+                    <span class="input-group-text iconWrap">
+                        <i class="fa-regular fa-rectangle-list"></i>
+                    </span>
+                   
+                    <input  id="equ_code" name="equ_code" required list="equ-code" autocomplete="off" placeholder="Equipment Code" class="form-control textFieldMedium" >
+                    <datalist id="equ-code">
+                    </datalist>
+                  </div>
+                </div>
+                </div>
+
+              <!-- =====================-->
+
+              <!-- Equipment Name -->
+              <div class="row inputWrap">
+                <label for="equipment_name" class="col-12 col-sm-4 col-form-label">
+                  <i class="fa-solid fa-computer"></i> Equipment Name
+                </label>
+                <div class="col-12 col-sm-8">
+                  <div class="input-group">
+                    <span class="input-group-text iconWrap">
+                      <i class="fa-regular fa-rectangle-list"></i>
+                    </span>
+                    <!-- <p id="equ_name_display" class="m-0 ms-5 fw-bold text-muted"></p> -->
+                      <input 
+                        id="equ_name_display" 
+                        name="equipment_name" 
+                        autocomplete="off" readonly
+                        placeholder="Equipment Name" 
+                        class="form-control textFieldMedium"
+                        
+                      >
+                  </div>
+                </div>
+              </div>
+
+              <!-- Priority -->
+              <div class="row inputWrap">
+                <label for="priority" class="col-12 col-sm-4 col-form-label"
+                  >Priority</label
+                >
+                <div class="col-12 col-sm-8">
+                  <div class="input-group">
+                    <span class="input-group-text iconWrap"
+                      ><i class="fa-solid fa-arrow-up-short-wide"></i></span>
+                    <select
+                      class="form-select textFieldSmall" 
+                      id="priority" name="priority"
+                    >
+                      <option disabled selected>--Select--</option>
+                    </select>
+                  </div>
+                </div>
+              </div> 
+
+              <!-- Maintenance Type -->
+              <!-- <div class="row inputWrap">
+                <label for="maintenance_type" class="col-12 col-sm-4 col-form-label">
+                  <i class="fa-solid fa-tools"></i> Maintenance Type
+                </label>
+                <div class="col-12 col-sm-8">
+                  <div class="input-group">
+                    <span class="input-group-text iconWrap">
+                      <i class="fa-solid fa-list"></i>
+                    </span>
+                    <select
+                      class="form-select textFieldMedium"
+                      id="mt_type"
+                      name="mt_type"
+                      required
+                    >
+                      <option disabled selected>--Select Maintenance Type--</option>
+                      <option value="preventive">Preventive Maintenance</option>
+                      <option value="corrective">Corrective Maintenance</option>
+                      <option value="emergency">Emergency Repair</option>
+                      <option value="predictive">Predictive Maintenance</option>
+                      <option value="calibration">Calibration</option>
+                    </select>
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- Issue Description -->
+              <div class="row inputWrap">
+                <label for="issue_description" class="col-12 col-sm-4 col-form-label">
+                  <i class="fa-regular fa-comment-dots"></i> Issue Description
+                </label>
+                <div class="col-12 col-sm-8">
+                  <div class="input-group">
+                    <span class="input-group-text iconWrap">
+                      <i class="fa-solid fa-file-lines"></i>
+                    </span>
+                    <textarea 
+                      id="issue_description" 
+                      name="issue_description" required
+                      class="form-control textField" 
+                      placeholder="Describe the issue in detail..." 
+                      rows="4"
+                      
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Attachment -->
+              <div class="row inputWrap">
+                <label for="attach" class="col-12 col-sm-4 col-form-label"
+                  >Attachment</label
+                >
+                <div class="col-12 col-sm-8">
+                    <div class="mb-3">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap"
+                        ><i class="fa-regular fa-folder-open"></i></span
+                        >
+                        <input id="attach" class="form-control textFieldMedium" type="file" name="attachment[]" multiple>
+                      </div>
+                      <div id="existingAttachments" class="mb-2"></div>
+                      </div>
+                </div>
+                </div>
+
+              <!-- Status -->
+              <!-- <div class="row inputWrap">
+                <label for="status" class="col-12 col-sm-4 col-form-label">
+                  <i class="fa-solid fa-circle-check"></i> Status
+                </label>
+                <div class="col-12 col-sm-8">
+                  <div class="input-group">
+                    <span class="input-group-text iconWrap">
+                      <i class="fa-solid fa-chart-bar"></i>
+                    </span>
+                    <input type="text" class="form-control textFieldMedium" id="status"
+                    name="status" value="Open" readonly
+                  />
+                    <select
+                      class="form-select textFieldMedium"
+                      id="status"
+                      name="status"
+                    >
+                      <option value="Open" selected>Open</option>
+                       <option value="in_progress">In Progress</option>
+                      <option value="on_hold">On Hold</option>
+                      <option value="closed">Closed</option> 
+                    </select> 
+                  </div>
+                </div>
+              </div> -->
+
+              <!-- Submit Buttons -->
+              <div class="d-flex gap-3 justify-content-center mt-4">
+                <button type="submit" id="submit" class="form-control w-25 bg-primary text-light">
+                  <i class="fa-solid fa-floppy-disk"></i> Save
+                </button>
+                <!-- <input type="hidden" id="csrf_token" name="csrf_token" value=""> -->
+                <!-- <input type="hidden" name="action" id="action" value=""> -->
+                <button type="reset" class="form-control w-25 bg-secondary text-light">
+                  <i class="fa-solid fa-xmark"></i> Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+    </div>
+    <footer id="footer_bg42" >
+
+      <table width="99%" cellpadding="0" cellspacing="0">
+          <tr>
+              <td  class="footer_left px-2" >
+                  <div class="title_5 float-start" >  
+                     
+                      &nbsp;
+                      <a href="../../user_help/index.htm" target="_blank" class="userHelp" >&nbsp;User Help</a>
+                  </div>
+                  &nbsp;&nbsp;
+                  <div class="hide_td foot-left">Last Login: </div>
+              </td>
+              
+              <td  class="cmp_dev">
+                  <div class="title_5 float-end">
+                      <div class="footer_text">Powered by &nbsp;
+                          <a href="http://www.minervasoft.net" class="minerva_brand"  target="_blank">Minerva Soft</a>&nbsp;&nbsp;
+                      </div>
+                  </div>
+              </td>
+          </tr>
+      </table>
+      
+    </footer>
+    <!-- Confirmation Modal -->
+<div id="confirmModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <p id="confirmText">Are you sure you want to Save ?</p>
+    <div class="btn-group">
+      <button id="save" class="btn btn-primary btn-sm">Yes, Save</button>
+      <button id="cancel" class="btn btn-secondary btn-sm">Cancel</button>
+    </div>
+  </div>
+</div>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="./js/common_mp.js"></script>
+    <script src="./js/common_data.js"></script>
+
+
+    <script>
+      let action = 'insert';
+      let comp_id = '';
+      document.addEventListener('DOMContentLoaded', async () => {
+        const params = new URLSearchParams(window.location.search);
+        const comp_id = params.get('comp_id')??'';
+        const action = params.get('action')??'insert'; // "edit" or "view"
+        fetchCommonData();
+        
+//     ========================     FORM  SUBMIT    ================================
+           
+            const form = document.getElementById('maintenanceRequestForm');
+
+            // Form submission handler
+            form.addEventListener('submit', async function(e) {
+              e.preventDefault();
+              showConfirm('Are you sure you want to submit?', async () => {
+              try{
+                displayLoader('show');
+                if (!csrfToken) {
+                  alertMessage('Token missing or invalid', 'e');
+                  displayLoader('hide');
+                  return;
+                  }
+                const formData = new FormData(form);
+              formData.append('action', action); // explicitly set
+               formData.append('csrf_token', csrfToken);
+              if (action === 'edit') {
+                formData.append('comp_id', comp_id);
+              }
+              const res = await fetch('./api/mp_request.php', { method: 'POST',headers: { 'X-CSRF-Token': csrfToken }, body: formData });
+              const data = await res.json();
+             
+              if(data.success){
+                alertMessage(data.message,'s','mp_request.html');
+              }
+              else{
+                alertMessage(data.message||'Network error.','e');
+              }
+              displayLoader('hide');
+            }
+            catch (error) {
+                    console.error('Error submitting', error);
+                    alertMessage('Network error. Please try again.', 'e');
+                    displayLoader('hide');
+                }
+              });
+            });
+
+//      =================== EDIT PRE FILL FORM===============================    //
+            if(comp_id){
+              if (!csrfToken) {
+                alertMessage('Token missing or invalid', 'e');
+                displayLoader('hide');
+                return;
+              }
+              const formData = new FormData();
+              // formData.append('action', '');
+              formData.append('comp_id', comp_id);
+              formData.append('csrf_token', csrfToken);
+              displayLoader('show');
+        try {
+
+            const res = await fetch(`./api/mp_request_report.php`,{
+              method: 'POST',
+              headers: { 'X-CSRF-Token': csrfToken },
+              body: formData
+            });
+          const result = await res.json();
+      
+          if (result.success && result.data) {
+            const data =result.data;
+            // Map your form field names to backend data keys
+              const map = {
+                request_id: data.cref_no,
+                issue_description: data.desc_prob,
+                branch_code: data.branch,
+                equ_code: data.product,
+                priority: data.priority,
+                status: data.status,
+                request_date: data.e_time
+              };
+      
+              // Fill text / textarea / input values
+              setTimeout(() => {
+                  for (const [name, value] of Object.entries(map)) {
+                    const el = document.querySelector(`[name="${name}"]`);
+                    if (el) el.value = value || '';
+                  }
+                }, 50);
+      
+
+
+
+  // ===============attachment================
+  document.getElementById('attach').removeAttribute('required');
+  let attachArr = Array.isArray(data.attachment) ? data.attachment : [];
+        // if (data.attachment) {
+        //     attachArr = data.attachment.replace(/^{|}$/g, '').split(',');
+        //     attachArr = attachArr.map(s => s.trim());
+        // }
+
+        const existingAttachmentsDiv = document.getElementById('existingAttachments');
+        existingAttachmentsDiv.innerHTML = '';
+
+        attachArr.forEach((filename, idx) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'd-flex align-items-center mb-1';
+            wrapper.innerHTML = `
+                <a href="./uploads/plan/${filename}" target="_blank">${filename}</a>
+                <i class="fas fa-trash ms-2 text-danger remove-att" style="cursor:pointer;" data-index="${idx}"></i>
+                <input type="hidden" id="attach_old" name="attach[]" value="${filename}">
+                `;
+            existingAttachmentsDiv.appendChild(wrapper);
+        });
+
+        // Remove button logic
+        existingAttachmentsDiv.querySelectorAll('.remove-att').forEach(icon => {
+              icon.addEventListener('click', () => {
+                  icon.parentElement.remove();
+              });
+          });
+
+        const remainingAttach = [];
+          document.querySelectorAll('#existingAttachments a').forEach(a => {
+            remainingAttach.push(a.textContent.trim());
+          });
+
+          // if (action === 'view') 
+          // {     document.querySelectorAll('input, select, textarea, button').forEach(el => {
+          //             if (!['button', 'hidden', 'submit'].includes(el.type)) el.disabled = true;
+          //             });
+          // }
+      
+              displayLoader('hide')
+          } else {
+            console.warn('No Complaint data found.');
+          }
+        } catch (err) {
+          console.error('Error loading maintenance Complaint:', err);
+          displayLoader('hide');
+        }
+      }
+
+
+      });
+     
+      </script>
+      
+    <script>
+      // Form validation and enhancement
+      document.addEventListener('DOMContentLoaded', async function() {
+        
+          flatpickr("#request_date", {
+            dateFormat: "d/m/Y",       // or "Y-m-d" if you want ISO format
+            defaultDate: new Date(),   // sets today's date
+            allowInput: false,
+            clickOpens: false
+          });
+       
+        if(!document.getElementById("request_id").value){  // Generate random 3-digit number (100–999)
+          const randomThreeDigit = `R${Math.floor(Math.random() * 900) + 100}`;
+          document.getElementById("request_id").value = randomThreeDigit;}
+
+    // ==============         Request By      =====================
+          const requestByInput = document.getElementById("request_by");
+
+          try {
+              const res = await fetch('./api/get_session_info.php');
+              if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+              const data = await res.json();
+              if (data.user_name) {
+                  requestByInput.value = data.user_name;
+                  requestByInput.readOnly = true; // optional
+              }
+          } catch (err) {
+              console.error("Failed to get session user ID:", err);
+          }
+
+  // ---------Toggle prodStage on branch Select----------
+      //       const el = (id) => document.getElementById(id);
+      // el("branch_code").addEventListener("change", function () {
+      //   el("prodStage").classList.remove("d-none");
+
+      //   el("prodStage").classList.add("d-flex");
+      // });
+     
+        });
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+
+<html>
+<head id="head">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    type="text/css"
+  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link href="./css/style.css" rel="stylesheet" type="text/css" />
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
+</head>
+    <body>
+    <div class="main_header d-flex justify-content-between">
+        <div class="headerLeft">
+            <div class="menuIcon menuwrap">
+            <i id="menuIcon" class="fa fa-bars" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas"></i>
+            </div>
+            <div class="brand-copyright">
+            <span class="mobile_view">
+                <a href="http://www.minervasoft.net" class="minerva_brand" target="_blank">Minerva Soft</a>
+            </span>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center gap-2">
+            <span class="welcomeTxt"></span>
+            <i class="fas fa-arrow-right-from-bracket"></i>
+        </div>
+
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
+          <div class="offcanvas-header text-white shadow-sm">
+            <h5 class="offcanvas-title d-flex align-items-center" id="offcanvasLabel">
+              <i class="fas fa-cogs me-2"></i> MINT
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+        
+          <div class="offcanvas-body bg-light">
+            <ul class="menu-list list-unstyled mb-0">
+        
+              <li class="menu-item mb-1">
+                <a href="./" class="menu-link">
+                  <i class="fas fa-home me-2"></i> Home
+                </a>
+              </li>
+        
+              <li class="menu-section mt-3 mb-1">Maintenance</li>
+              <li class="menu-item">
+                <a href="mp_form.html" class="menu-link"><i class="fas fa-wrench me-2"></i> Maintenance Plan</a>
+              </li>
+              <li class="menu-item">
+                <a href="mp_request.html" class="menu-link"><i class="fas fa-exclamation-circle me-2"></i> Complaint</a>
+              </li>
+        
+              <li class="menu-section mt-3 mb-1">Reports</li>
+              <li class="menu-item">
+                <a href="mplan_report.html" class="menu-link"><i class="fas fa-file-contract me-2"></i> Maintenance Report</a>
+              </li>
+              <li class="menu-item">
+                <a href="mp_request_report.html" class="menu-link"><i class="fas fa-file-alt me-2"></i> Complaint Report</a>
+              </li>
+              <li class="menu-item">
+                <a href="wo_order_report.html" class="menu-link"><i class="fas fa-file-invoice me-2"></i> Work Order Report</a>
+              </li>
+        
+            </ul>
+          </div>
+        </div>
+        </div>
+    <div class="container formContainer">
+        <div id="alert-message" class="alert">
+             <div id="alert-msg"></div>
+        </div>
+        <i class="fas fa-comment" id="show-last-error" title="View Last Error" ></i>
+
+        <div class="w-100 d-flex justify-content-between align-items-center mb-3">
+            <p class="page-title m-0">Work Order</p>
+            <a class="text-decoration-none fw-bold" target="_blank" href="wo_order_report.html">View Report</a>
+        </div>
+        <span class="block w-100">
+        </span>
+
+            <div class="card bg-light text-dark shadow">
+                <div class="card-header bg-body text-dark">
+                    <div class="card-body">
+                        <form id="woForm" >
+                            <!-- Work Order No. -->
+                            <!-- <div class="row inputWrap">
+                                <label for="work_order" class="col-12 col-sm-4 col-form-label">Work Order No.</label>
+                                <div class="col-12 col-sm-8">
+                                    <div class="input-group">
+                                        <span class="input-group-text iconWrap"><i class="fa-solid fa-code-branch"></i></span>
+                                        <input type="text" class="form-control textFieldSmall" id="work_order" name="work_order" required>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                            <!-- Request Id -->
+                            <div class="row inputWrap">
+                              <label for="ref_idf" class="col-12 col-sm-4 col-form-label">Request Id</label>
+                              <div class="col-12 col-sm-8">
+                                <div class="input-group">
+                                  <span class="input-group-text iconWrap"><i class="fa-solid fa-city"></i></span>
+                                  <input type="hidden" name="id" id="id" value="">
+                                  <select class="form-control textFieldMedium2" readonly name="ref_idf" id="ref_idf" required>
+                                    <option value="">-- Select Complaint --</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            
+                            <!-- Equipment -->
+                                <div class="row inputWrap">
+                                <label for="equ-code" class="col-sm-4 col-form-label">Equipment</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                    <span class="input-group-text iconWrap"><i class="fa-regular fa-rectangle-list"></i></span>
+                                    <input id="equ-code" name="equ_code" class="form-control textFieldMedium" readonly>
+                                    </div>
+                                </div>
+                                </div>
+
+                                <!-- Maintenance Type -->
+                                <div id="mtype" class="row inputWrap">
+                                <label for="mt_type" class="col-sm-4 col-form-label">Maintenance Type</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                    <span class="input-group-text iconWrap"><i class="fa-solid fa-list"></i></span>
+                                    <input id="mt_type" name="mt_type" class="form-control textFieldMedium" readonly>
+                                    </div>
+                                </div>
+                                </div>
+
+                                <!-- Task Decision -->
+                                <div class="row inputWrap">
+                                <label for="task_des" class="col-12 col-sm-4 col-form-label">Task Decision</label>
+                                <div class="col-12 col-sm-8">
+                                    <div class="input-group">
+                                    <span class="input-group-text iconWrap"><i class="fa-solid fa-list-check"></i></span>
+                                    <input type="text" class="form-control textFieldMedium2" id="task_des" name="task_des" readonly>
+                                    </div>
+                                </div>
+                                </div>
+
+                                              <!-- Attachment -->
+                                  <!-- <div class="row inputWrap">
+                                    <label for="attach" class="col-12 col-sm-4 col-form-label"
+                                      >Attachment</label
+                                    >
+                                    <div class="col-12 col-sm-8">
+                                        <div class="mb-3">
+                                          <div class="input-group">
+                                            <span class="input-group-text iconWrap"
+                                            ><i class="fa-regular fa-folder-open"></i></span
+                                            >
+                                            <input id="attach" class="form-control textFieldMedium" required type="file" name="attachment[]" multiple>
+                                          </div>
+                                          <div id="existingAttachments" class="mb-2"></div>
+                                          </div>
+                                    </div>
+                                    </div> -->
+
+                            <!-- Assigned Technician -->
+                            <div class="row inputWrap">
+                                <label for="assign_to" class="col-sm-4 col-form-label">Assigned Technician</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <span class="input-group-text iconWrap"><i class="fa-solid fa-user-tie"></i></span>
+                                        <select class="form-select textFieldMedium" name="assign_to" id="assign_to" required>
+                                            <option disabled selected>--Select--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Technical Reason -->
+                            <div class="row inputWrap">
+                                <label for="tdesc" class="col-12 col-sm-4 col-form-label">Technical Reason</label>
+                                <div class="col-12 col-sm-8">
+                                    <div class="input-group">
+                                        <span class="input-group-text iconWrap"><i class="fa-regular fa-comment-dots"></i></span>
+                                        <textarea name="tdesc" id="tdesc" placeholder="Description here" class="form-control textFieldMedium"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Hidden Fields -->
+                            <!-- <input type="hidden" name="csrf_token" id="csrf_token" value=" echo $csrf_token; "> -->
+                            <!-- <input type="hidden" name="action" id="action" value="submit_work_order"> -->
+                            
+                            <!-- Submit button -->
+                            <div class="d-flex gap-3 justify-content-center mt-4">
+                                <button type="submit" id="submit"  class="form-control w-25 bg-primary text-light">Save</button>
+                                <button type="reset" class="form-control w-25 bg-secondary text-light">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer id="footer_bg42" >
+
+          <table width="99%" cellpadding="0" cellspacing="0">
+              <tr>
+                  <td  class="footer_left px-2" >
+                      <div class="title_5 float-start" >  
+                         
+                          &nbsp;
+                          <a href="../../user_help/index.htm" target="_blank" class="userHelp" >&nbsp;User Help</a>
+                      </div>
+                      &nbsp;&nbsp;
+                      <div class="hide_td foot-left">Last Login: </div>
+                  </td>
+                  
+                  <td  class="cmp_dev">
+                      <div class="title_5 float-end">
+                          <div class="footer_text">Powered by &nbsp;
+                              <a href="http://www.minervasoft.net" class="minerva_brand"  target="_blank">Minerva Soft</a>&nbsp;&nbsp;
+                          </div>
+                      </div>
+                  </td>
+              </tr>
+          </table>
+          
+          
+        </footer>
+        <!-- Confirmation Modal -->
+        <div id="confirmModal" class="modal-overlay" style="display:none;">
+          <div class="modal-box">
+            <p id="confirmText">Are you sure you want to Save ?</p>
+            <div class="btn-group">
+              <button id="save" class="btn btn-primary btn-sm">Yes, Save</button>
+              <button id="cancel" class="btn btn-secondary btn-sm">Cancel</button>
+            </div>
+          </div>
+        </div>
+        <script src="./js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="./js/common_mp.js"></script>
+        <script src="./js/common_data.js"></script>
+        <script>
+
+const params = new URLSearchParams(window.location.search);
+const wo_id = params.get('woid') ?? '';
+const action = params.get('action') ?? 'insert';
+const el = (id) => document.getElementById(id);
+
+// =============================== Initialization ===============================
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await fetchCommonData();
+  await loadComplaints();
+  setupComplaintAutoFill();
+  const woForm = document.getElementById('woForm');
+
+woForm.addEventListener('submit', (e) => {
+  e.preventDefault(); // ✅ Prevent default form submission
+  showConfirm('Are you sure you want to submit?', submitWorkOrder);
+});
+});
+
+
+// =============================== Load Complaints ===============================
+async function loadComplaints() {
+      displayLoader('show');
+    const formData = new FormData();
+    formData.append('csrf_token', csrfToken);
+  try {
+    // if(action=='insert'){
+    // formData.append('rstatus', 'unas');
+    // }
+    const res = await fetch('./api/mp_request_report.php', {
+      method: 'POST',
+      headers: { 'X-CSRF-Token': csrfToken },
+      body: formData
+    });
+    const data = await res.json();
+
+    const select = document.getElementById('ref_idf');
+    select.innerHTML = '<option value="">-- Select Complaint --</option>';
+
+    if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+      data.data.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.cref_no; // complaint reference number
+        opt.textContent = c.cref_no;
+        select.appendChild(opt);
+      });
+    } else {
+      const opt = document.createElement('option');
+      opt.value = '';
+      opt.textContent = 'No open complaints';
+      select.appendChild(opt);
+    }
+    displayLoader('hide')
+} catch (err) {
+    console.error('Error loading complaints:', err);
+    displayLoader('hide');
+
+  }
+}
+
+// =================== Auto-fill complaint details after selection / query param ===================
+async function setupComplaintAutoFill() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const comp_id = urlParams.get('comp_id');
+  const woid = urlParams.get('woid');
+
+  //--- 1️⃣ If page opened via complaint (comp_id param)  ---
+  if (comp_id) {
+    if (!csrfToken) {
+        alertMessage('Token missing or invalid', 'e');
+        displayLoader('hide');
+        return;
+      }
+      const formData = new FormData();
+      formData.append('comp_id', comp_id);
+      formData.append('csrf_token', csrfToken);
+    formData.append('ref_cat', 'c'); // complaint category
+    displayLoader('show')
+    try {
+
+      const res = await fetch('./api/mp_request_report.php', {
+        method: 'POST',
+        headers: { 'X-CSRF-Token': csrfToken },
+        body: formData
+      });
+
+      const result = await res.json();
+      if (result.success && result.data) {
+        const data = result.data;
+
+        el('ref_idf').value = data.cref_no ?? data.ref_no;
+        el('ref_idf').classList.add('readonly');
+        el('equ-code').value = data.product || '';
+        el('mtype').style.display = 'none';
+        el('task_des').value = data.desc_prob || '';
+      } else {
+        alert('No data found for this reference.');
+      }
+      displayLoader('hide')
+    } catch (err) {
+      console.error('Error fetching complaint details:', err);
+      displayLoader('hide');
+
+    }
+  }
+
+  // ----- 2️  If page opened via Work Order edit (woid param) --
+  else if (woid) {
+    if (!csrfToken) {
+        alertMessage('Token missing or invalid', 'e');
+        displayLoader('hide');
+        return;
+      }
+      const formData = new FormData();
+      formData.append('wo_id', woid);
+      formData.append('csrf_token', csrfToken);
+    
+    displayLoader('show')
+    try {
+
+      const res = await fetch('./api/wo_order_report.php', {
+        method: 'POST',
+        headers: { 'X-CSRF-Token': csrfToken },
+        body: formData
+      });
+
+      const result = await res.json();
+      if (result.success && result.data) {
+        const data = result.data;
+        el('ref_idf').value = data.ref_no ?? '';
+        el('ref_idf').classList.add('readonly');
+        el('equ-code').value = data.equipment || '';
+        el('mtype').style.display = 'none';
+        el('task_des').value = data.desc_prob || '';
+        el('assign_to').value = String(data.assign_to);
+      }
+      displayLoader('hide')
+      } catch (err) {
+      console.error('Error resolving comp_id from woid:', err);
+      displayLoader('hide');
+
+    }
+  }
+
+  // 3️⃣ When user manually changes complaint in dropdown
+//   el('ref_idf').addEventListener('change', async (e) => {
+//     const ref_no = e.target.value;
+//     if (!ref_no) return;
+
+//     try {
+//       displayLoader('show')
+//       const formData = new FormData();
+//       formData.append('ref_no', ref_no);
+          // formData.append('csrf_token', csrfToken);
+
+//       const res = await fetch('./api/mp_request_report.php', {
+//         method: 'POST',
+//         headers: { 'X-CSRF-Token': csrfToken },
+//         body: formData
+//       });
+//       const result = await res.json();
+
+//       if (result.success && result.data) {
+//         const data = result.data;
+//         el('equ-code').value = data.product || '';
+//         el('mtype').style.display = 'none';
+//         el('task_des').value = data.desc_prob || '';
+//         //for  attach
+//         // let attachArr = Array.isArray(data.attachment) ? data.attachment : [];
+//         // // if (data.attachment) {
+//         // //     attachArr = data.attachment.replace(/^{|}$/g, '').split(',');
+//         // //     attachArr = attachArr.map(s => s.trim());
+//         // // }
+
+//         // const existingAttachmentsDiv = document.getElementById('existingAttachments');
+//         // existingAttachmentsDiv.innerHTML = '';
+
+//         // attachArr.forEach((filename, idx) => {
+//         //     const wrapper = document.createElement('div');
+//         //     wrapper.className = 'd-flex align-items-center mb-1';
+//         //     wrapper.innerHTML = `
+//         //         <a href="./uploads/plan/${filename}" target="_blank">${filename}</a>
+//         //         <i class="fas fa-trash ms-2 text-danger remove-att" style="cursor:pointer;" data-index="${idx}"></i>
+//         //         <input type="hidden" id="attach_old" name="attach[]" value="${filename}">
+//         //         `;
+//         //     existingAttachmentsDiv.appendChild(wrapper);
+//         // });
+
+//         // // Remove button logic
+//         // existingAttachmentsDiv.querySelectorAll('.remove-att').forEach(icon => {
+//         //       icon.addEventListener('click', () => {
+//         //           icon.parentElement.remove();
+//         //       });
+//         //   });
+
+//         // const remainingAttach = [];
+//         //   document.querySelectorAll('#existingAttachments a').forEach(a => {
+//         //     remainingAttach.push(a.textContent.trim());
+//         //   });
+//       } else {
+//         alert('No data found for this reference.');
+//       }
+//       displayLoader('hide')
+//     } catch (err) {
+          // displayLoader('hide');
+//       console.error('Error fetching complaint details:', err);
+//     }
+//   });
+}
+
+// =============================== Submit Work Order ===============================
+
+async function submitWorkOrder() {
+  const form = document.getElementById('woForm');
+  const formData = new FormData(form);
+  formData.append('action', action);
+  if (action === 'edit') formData.append('wo_id', wo_id);
+  formData.append('csrf_token', csrfToken);
+  try {
+    displayLoader('show');
+    if (!csrfToken) {
+            alertMessage('Token missing or invalid', 'e');
+            displayLoader('hide');
+            return;
+        }
+    const response = await fetch('./api/wo_order.php', {
+      method: 'POST',
+      headers: { 'X-CSRF-Token': csrfToken },
+      body: formData
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      alertMessage(result.message || 'Work order saved successfully!', 's','./wo_order.html');
+      form.reset();
+    } else {
+      alertMessage(result.message || 'Failed to create work order.', 'e');
+    }
+    displayLoader('hide')
+    } catch (error) {
+    console.error('Error submitting work order:', error);
+    alertMessage('Network error. Please try again.', 'e');
+    displayLoader('hide');
+
+  }
+}
+
+
+   </script>
+        </body>
+    </html>

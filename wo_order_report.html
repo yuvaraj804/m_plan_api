@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head >
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    type="text/css"
+  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link href="./css/style.css" rel="stylesheet" type="text/css" />
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="main_header d-flex justify-content-between">
+    <div class="headerLeft">
+      <div class="menuIcon menuwrap">
+        <i id="menuIcon" class="fa fa-bars" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas"></i>
+      </div>
+      <div class="brand-copyright">
+        <span class="mobile_view">
+          <a href="http://www.minervasoft.net" class="minerva_brand" target="_blank">Minerva Soft</a>
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end align-items-center gap-2">
+      <span class="welcomeTxt"></span>
+      <i class="fas fa-arrow-right-from-bracket"></i>
+    </div>
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
+      <div class="offcanvas-header text-white shadow-sm">
+        <h5 class="offcanvas-title d-flex align-items-center" id="offcanvasLabel">
+          <i class="fas fa-cogs me-2"></i> MINT
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+    
+      <div class="offcanvas-body bg-light">
+        <ul class="menu-list list-unstyled mb-0">
+    
+          <li class="menu-item mb-1">
+            <a href="./" class="menu-link">
+              <i class="fas fa-home me-2"></i> Home
+            </a>
+          </li>
+    
+          <li class="menu-section mt-3 mb-1">Maintenance</li>
+          <li class="menu-item">
+            <a href="mp_form.html" class="menu-link"><i class="fas fa-wrench me-2"></i> Maintenance Plan</a>
+          </li>
+          <li class="menu-item">
+            <a href="mp_request.html" class="menu-link"><i class="fas fa-exclamation-circle me-2"></i> Complaint</a>
+          </li>
+    
+          <li class="menu-section mt-3 mb-1">Reports</li>
+          <li class="menu-item">
+            <a href="mplan_report.html" class="menu-link"><i class="fas fa-file-contract me-2"></i> Maintenance Report</a>
+          </li>
+          <li class="menu-item">
+            <a href="mp_request_report.html" class="menu-link"><i class="fas fa-file-alt me-2"></i> Complaint Report</a>
+          </li>
+          <li class="menu-item">
+            <a href="wo_order_report.html" class="menu-link"><i class="fas fa-file-invoice me-2"></i> Work Order Report</a>
+          </li>
+    
+        </ul>
+      </div>
+    </div>
+  </div>
+    <div id="alert-message" class="alert">
+        <div id="alert-msg"></div>
+        </div>
+    <i class="fas fa-comment" id="show-last-error" title="View Last Error" ></i>
+
+        <div class="p-2 my-5" >
+          <div class="title_8">
+            <span class="page-title">Work Order Report</span>
+        </div>
+         <div class="report-form-table mb-4">
+        <form id="report_form">
+    <table id="report-search" class="w-100">
+      <thead class="colorHeader">
+        <tr class=" text-center ">
+          <th class="table_th" data-key="ref_type" width="10%">Reference Type</th>
+          <th class="table_th" data-key="date_range" width="15%">Date Range</th>
+          <th class="table_th" data-key="equ_code" width="15%">Equipment</th>
+          <!-- <th class="table_th" data-key="mtype" width="15%">Maintenance Type</th> -->
+          <th class="table_th" data-key="assign_to" width="15%">Assigned To</th>
+          <th class="table_th" data-key="status" width="10%">Status</th>
+          <th class="table_th" data-key="output" width="10%">Output</th>
+          <th class="table_th" data-key="action" width="8%">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <!-- Branch -->
+            <td class="table_td" data-label="Reference Type">
+              <select class="py-1 form-control textFieldMedium2" name="ref_cat" id="ref_cat" >
+                <option value="complaint">Complaint</option>
+                <option value="plan">Plan</option>
+              </select>
+          </td> 
+          
+
+          <!-- Date Range -->
+          <td class="table_td" data-label="Date Range">
+            <div class="d-flex gap-1">
+              <input type="date" name="from_date" id="from_date" placeholder="From" class="form-control form-control-sm datepick">
+              <input type="date" name="to_date" id="to_date" placeholder="To" class="form-control form-control-sm datepick">
+            </div>
+          </td>
+  
+          <!-- Equipment / Type -->
+          <td class="table_td" data-label="Equipment">
+            <input id="equ_code" name="equ_code" list="equ-code" autocomplete="off" placeholder="Equipment Code" class=" py-1 form-control textFieldMedium">
+            <datalist id="equ-code">
+            </datalist>
+          </td>
+          <!--  Type -->
+          <!-- <td class="table_td" data-label="Type">
+            <select name="mt_type" id="mt_type" class="form-select form-select-sm">
+              <option value="">--Select--</option>
+              
+            </select>
+          </td> -->
+  
+          <!-- Assigned To -->
+          <td class="table_td" data-label="Assigned To">
+            <select name="assign_to" id="assign_to" class="form-select form-select-sm">
+              <option value="">--Select--</option>
+           
+            </select>
+          </td>
+  
+          <!-- Status -->
+          <td class="table_td" data-label="Status">
+            <select name="rstatus" id="rstatus" class="form-select form-select-sm">
+              <option value="">All</option> 
+              <option value="Open">Open</option>
+              <option value="Closed">Closed</option>
+            </select>
+          </td>
+  
+          <!-- Output -->
+          <td class="table_td" data-label="Output">
+            <select name="output" id="output" class="form-select form-select-sm">
+              <option value="HTML">On Screen</option>
+              <!-- <option value="CSV">CSV</option>
+              <option value="EXCEL">Excel</option> -->
+            </select>
+          </td>
+  
+          <!-- Action -->
+          <td class="table_td text-center" data-label="Action">
+            <button type="button" id="search" class="btn btn-primary btn-sm px-3">
+              <i class="fas fa-search"></i> Search
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    </form>
+  </div>
+          
+  <div class="text-end">
+    <span class="text-success report-table-export p-1"  role="button" 
+          id="show-excel" data-table="woTableWrap" style="display:none;">
+      <i class="fas fa-file-excel"></i> Excel
+    </span>
+  </div>
+ 
+    <div id="woTableWrap"></div>
+</div>
+
+<div class="modal fade" id="closeWoModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title">Close Work Order</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form id="closeWoForm" enctype="multipart/form-data">
+        <input type="hidden" name="wo_id" id="wo_id">
+
+        <div class="modal-body">
+          <div class="mb-2">
+            <label>Completion Date</label>
+            <input type="date" class="form-control datepick" autocomplete="off" name="compl_dtime" required>
+          </div>
+
+          <div class="mb-2">
+            <label>Work Done Description</label>
+            <textarea name="compl_desc" class="form-control" rows="2"></textarea>
+          </div>
+
+          <div class="mb-2">
+            <label>Attachments</label>
+            <input type="file" class="form-control" name="compl_attachment[]" multiple>
+          </div>
+
+          <div class="mb-2">
+            <label>Remarks</label>
+            <textarea name="compl_remarks" class="form-control" rows="2"></textarea>
+          </div>
+
+          <div class="mb-2">
+            <label>Recommended Follow-up</label>
+            <textarea name="follow_up" class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="closewo_btn" type="button" class="btn btn-success">Close WO</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<footer id="footer_bg42" >
+
+  <table width="99%" cellpadding="0" cellspacing="0">
+      <tr>
+          <td  class="footer_left px-2" >
+              <div class="title_5 float-start" >  
+                 
+                  &nbsp;
+                  <a href="../../user_help/index.htm" target="_blank" class="userHelp" >&nbsp;User Help</a>
+              </div>
+              &nbsp;&nbsp;
+              <div class="hide_td foot-left">Last Login: </div>
+          </td>
+          
+          <td  class="cmp_dev">
+              <div class="title_5 float-end">
+                  <div class="footer_text">Powered by &nbsp;
+                      <a href="http://www.minervasoft.net" class="minerva_brand"  target="_blank">Minerva Soft</a>&nbsp;&nbsp;
+                  </div>
+              </div>
+          </td>
+      </tr>
+  </table>
+  <!-- Delete Confirmation Modal -->
+<div id="confirmModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <p id="confirmText">Are you sure you want to delete?</p>
+    <div class="btn-group">
+      <button id="save" class="btn btn-danger btn-sm">Yes, Delete</button>
+      <button id="cancel" class="btn btn-secondary btn-sm">Cancel</button>
+    </div>
+  </div>
+</div>
+  
+</footer>
+<script src="./js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="./js/common_mp.js"></script>
+<script src="./js/common_data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<script>
+    // =============================== Load Common Data ===============================
+    fetchCommonData();
+    
+    // =============================== Load Work Orders ===============================
+    const filterForm = document.getElementById('report_form');
+    const search = document.getElementById('search');
+    const tbody = document.getElementById('woList');
+    search.addEventListener('click', (e) => {
+      e.preventDefault();
+      loadWorkOrders();
+    });
+    async function loadWorkOrders() {
+  try {
+    displayLoader('show');
+
+    if (!csrfToken) {
+      alertMessage('Token missing or invalid', 'e');
+      displayLoader('hide');
+      return;
+    }
+
+    const formData = new FormData(filterForm);
+    formData.append('csrf_token', csrfToken);
+
+    const res = await fetch('./api/wo_order_report.php', {
+      method: 'POST',
+      headers: { 'X-CSRF-Token': csrfToken },
+      body: formData
+    });
+
+    const data = await res.json();
+    const container = document.getElementById("woTableWrap");
+    container.innerHTML = ""; // clear previous table
+    // === Create Table ===
+    const table = document.createElement("table");
+    table.id = "woTable";
+    table.className = "report_table w-100";
+
+    // === Header ===
+    const thead = document.createElement("thead");
+    thead.className = "colorHeader";
+    thead.style.height = "45px";
+    thead.innerHTML = `
+      <tr>
+        <th class="report_table_th" data-key="ref_no">Reference No</th>
+        <th class="report_table_th" data-key="product_name">Equipment</th>
+        <th class="report_table_th" data-key="ref_cat">Ref Type</th>
+        <th class="report_table_th" data-key="desc_prob">Description</th>
+        <th class="report_table_th" data-key="assign_to">Assigned To</th>
+        <th class="report_table_th" data-key="wo_status">Status</th>
+        <th class="report_table_th" data-key="action">Action</th>
+      </tr>`;
+    table.appendChild(thead);
+
+    // === Body === 
+    const tbody = document.createElement("tbody");
+    tbody.id = "woList";
+
+//     {
+//     "wo_id": 53,
+//     "ref_cat": "Complaint",
+//     "ref_idf": 47,
+//     "ref_no": "R511",
+//     "assign_to": "E002",
+//     "assign_name": "Vijay",
+//     "wo_status": "Open",
+//     "attachment": [
+//         ""
+//     ],
+//     "desc_prob": "sdew",
+//     "compl_dtime": null,
+//     "e_time": "2025-10-30 10:40:55",
+//     "equipment_id": 9,
+//     "equipment": "Machine012",
+//     "mtype": "",
+//     "compl_remarks": null
+// }
+    if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+      data.data.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="report_table_td" data-label="Reference No">${row.ref_no || '-'}</td>
+          <td class="report_table_td" data-label="Equipment">${row.equipment || '-'}</td>
+          <td class="report_table_td" data-label="Ref Type">${row.ref_cat || '-'}</td>
+          <td class="report_table_td" data-label="Description">${row.desc_prob || '-'}</td>
+          <td class="report_table_td" data-label="Assigned To">${row.assign_name || '-'}</td>
+          <td class="report_table_td" data-label="Status">${row.wo_status || '-'}</td>
+          <td class="report_table_td" data-label="Action">
+            <a href="../../scripts/stk/matreq_entry.php?action=add" target='_blank' class="text-primary ${row.wo_status === 'Closed' ? 'd-none' : ''}" title="Create Material Requisition">
+                <i class="fas fa-plus "></i>
+            </a>
+            <a href="#" class="text-primary closeBtn ${row.wo_status === 'Closed' ? 'd-none' : ''}" 
+              data-id="${row.wo_id}" title="Close Work Order">
+              <i class="fas fa-hand-point-up"></i>
+            </a>
+            <a href="#" class="mx-1 text-primary editBtn ${row.wo_status === 'Closed' ? 'd-none' : ''}" 
+              data-id="${row.wo_id}"  title="Edit">
+              <i class="fas fa-edit"></i>
+            </a>
+            <a href="#"  class="mx-1 text-danger deleteBtn" data-id="${row.wo_id}" title="Delete">
+              <i class="fas fa-trash-alt"></i>
+            </a>
+          </td>`;
+        tbody.appendChild(tr);
+        
+      });
+    } else {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-3">No work orders found.</td></tr>`;
+    }
+
+    table.appendChild(tbody);
+    container.appendChild(table);
+    displayLoader('hide');
+
+    // === Handle Actions ===
+    tbody.addEventListener('click', async (e) => {
+      const editBtn = e.target.closest('.editBtn');
+      const deleteBtn = e.target.closest('.deleteBtn');
+      const closeBtn = e.target.closest('.closeBtn');
+
+      // 🔹 Edit
+      if (editBtn) {
+        e.preventDefault();
+        const id = editBtn.dataset.id;
+        // window.location.href = `wo_order.html?woid=${id}&action=edit`;
+        window.open(`wo_order.html?woid=${id}&action=edit`, '_blank'); 
+        return;
+      }
+
+      // 🔹 Delete
+      if (deleteBtn) {
+        e.preventDefault();
+        const id = deleteBtn.dataset.id;
+        showConfirm('Are you sure you want to delete this Work Order?', async () => {
+          const delForm = new FormData();
+          delForm.append('action', 'del');
+          delForm.append('wo_id', id);
+          delForm.append('csrf_token', csrfToken);
+
+          try {
+            displayLoader('show');
+            if (!csrfToken) {
+            alertMessage('Token missing or invalid', 'e');
+            displayLoader('hide');
+            return;
+        }
+            const res = await fetch('./api/wo_order.php', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken },body: delForm });
+            const result = await res.json();
+            if (result.success) {
+              alertMessage('Work Order deleted successfully', 's');
+              loadWorkOrders(); // reload
+            } else {
+              alertMessage(result.message || 'Failed to delete Work Order', 'e');
+            }
+            displayLoader('hide');
+          } catch (err) {
+            console.error('Error deleting Work Order:', err);
+            alertMessage('Error deleting Work Order', 'e');
+            displayLoader('hide');
+
+          }
+        });
+        return;
+      }
+
+      if (closeBtn) {
+    e.preventDefault();
+    selectedWoId = closeBtn.dataset.id;
+    // reset modal form if needed
+    const modalEl = document.getElementById('closeWoModal');
+    if (modalEl) {
+      const modalForm = modalEl.querySelector('form');
+      if (modalForm) modalForm.reset();
+      const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+      modal.show();
+    }
+    return;
+  }
+
+  
+});
+
+        // ✅ Show button only when table has rows
+        const showExcel = document.getElementById('show-excel');
+      // const table = document.getElementById(showExcel.dataset.table);
+
+      if (table && table.querySelectorAll('tbody tr').length > 0) {
+        showExcel.style.display = 'inline-block';
+      }
+
+      // ✅ Click event to trigger Excel export
+      if (!showExcel.dataset.bound) {
+      showExcel.addEventListener('click', () => {
+        const tableId = showExcel.dataset.table;
+        exportTableToExcel(tableId, "Work Order Report", ["Action"]);
+      });
+      showExcel.dataset.bound = true; // prevent duplicate listeners
+      }
+  } catch (err) {
+    console.error('Error loading work orders:', err);
+    document.getElementById("woTableWrap").innerHTML = `<p class="text-center text-muted py-3">Failed to load data</p>`;
+    alertMessage('Failed to load data', 'e');
+    displayLoader('hide');
+  }
+}
+
+ // =============================== Attach & Submit Close Work Order ===============================
+// single modal submit handler (attach once)
+(function attachCloseWoHandler() {
+  const closeWoForm = document.getElementById('closeWoForm');
+  const closewo_btn = document.getElementById('closewo_btn');
+  if (!closeWoForm || !closewo_btn) return;
+
+  // ensure only one handler
+  closewo_btn.onclick = async (e) => {
+    e.preventDefault();
+    if (!selectedWoId) {
+      alertMessage('No work order selected', 'e');
+      return;
+    }
+
+    const formData = new FormData(closeWoForm);
+    formData.append('action', 'close');
+    formData.append('wo_id', selectedWoId);
+    formData.append('csrf_token', csrfToken);
+
+    try {
+      displayLoader('show');
+      if (!csrfToken) {
+            alertMessage('Token missing or invalid', 'e');
+            displayLoader('hide');
+            return;
+      
+        }
+      const res = await fetch('./api/wo_order.php', { method: 'POST', headers: { 'X-CSRF-Token': csrfToken },body: formData });
+      const data = await res.json();
+
+      if (data.success) {
+        alertMessage(data.message || 'Work order closed successfully.', 's');
+        bootstrap.Modal.getInstance(document.getElementById('closeWoModal'))?.hide();
+        selectedWoId = null;
+        loadWorkOrders(); // refresh list
+      } else {
+        alertMessage(data.message || 'Error closing work order.', 'e');
+      }
+    } catch (err) {
+      console.error('Error closing work order:', err);
+      alertMessage('Network error. Please try again.', 'e');
+    } finally {
+      displayLoader('hide');
+    }
+  };
+})();
+ 
+
+   // ----refernce filter - select ref populate-------
+    //   const select = document.getElementById('ref_no');
+    // select.innerHTML = '<option value="">-- Select --</option>';
+    // if (data.success && Array.isArray(data.data) && data.data.length > 0) {
+    //   data.data.forEach(c => {
+    //     const opt = document.createElement('option');
+    //     opt.value = c.wo_id; // actual ID
+    //     opt.textContent = c.ref_no; // display ref number + ""
+    //     select.appendChild(opt);
+    //   });
+    // } else {
+    //   const opt = document.createElement('option');
+    //   opt.value = '';
+    //   opt.textContent = 'No open complaints';
+    //   select.appendChild(opt);
+    // }
+    // -------select populate end--------
+  </script>
+  
+
+
+</body>
+</html>

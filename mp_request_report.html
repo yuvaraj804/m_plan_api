@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    type="text/css"
+  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link href="./css/style.css" rel="stylesheet" type="text/css" />
+  <link href="./css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <div class="main_header d-flex justify-content-between">
+    <div class="headerLeft">
+      <div class="menuIcon menuwrap">
+        <i id="menuIcon" class="fa fa-bars" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas"></i>
+      </div>
+      <div class="brand-copyright">
+        <span class="mobile_view">
+          <a href="http://www.minervasoft.net" class="minerva_brand" target="_blank">Minerva Soft</a>
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end align-items-center gap-2">
+      <span class="welcomeTxt"></span>
+      <i class="fas fa-arrow-right-from-bracket"></i>
+    </div>
+
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
+      <div class="offcanvas-header text-white  shadow-sm">
+        <h5 class="offcanvas-title d-flex align-items-center" id="offcanvasLabel">
+          <i class="fas fa-cogs me-2"></i> MINT
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+    
+      <div class="offcanvas-body bg-light">
+        <ul class="menu-list list-unstyled mb-0">
+    
+          <li class="menu-item mb-1">
+            <a href="./" class="menu-link">
+              <i class="fas fa-home me-2"></i> Home
+            </a>
+          </li>
+    
+          <li class="menu-section mt-3 mb-1">Maintenance</li>
+          <li class="menu-item">
+            <a href="mp_form.html" class="menu-link"><i class="fas fa-wrench me-2"></i> Maintenance Plan</a>
+          </li>
+          <li class="menu-item">
+            <a href="mp_request.html" class="menu-link"><i class="fas fa-exclamation-circle me-2"></i> Complaint</a>
+          </li>
+    
+          <li class="menu-section mt-3 mb-1">Reports</li>
+          <li class="menu-item">
+            <a href="mplan_report.html" class="menu-link"><i class="fas fa-file-contract me-2"></i> Maintenance Report</a>
+          </li>
+          <li class="menu-item">
+            <a href="mp_request_report.html" class="menu-link"><i class="fas fa-file-alt me-2"></i> Complaint Report</a>
+          </li>
+          <li class="menu-item">
+            <a href="wo_order_report.html" class="menu-link"><i class="fas fa-file-invoice me-2"></i> Work Order Report</a>
+          </li>
+    
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert -->
+  <div id="alert-message" class="alert">
+    <div id="alert-msg"></div>
+  </div>
+  <i class="fas fa-comment" id="show-last-error" title="View Last Error" ></i>
+
+  <!-- Page Content -->
+  <div class="p-2 my-5">
+    <div class="title_8">
+      <span class="page-title">Maintenance Complaint Report</span>
+    </div>
+    <!--=============================Filter Table=================================== -->
+    <div class="report-form-table mb-2">
+      <form id="report_form">
+  <table id="report-search" class="w-100">
+    <thead class="colorHeader">
+      <tr class=" text-center ">
+        <th class="table_th" data-key="branch_code" width="10%">Branch</th>
+        <th class="table_th" data-key="date_range" width="15%">Date Range</th>
+        <th class="table_th" data-key="equ_code" width="15%">Equipment</th>
+        <!-- <th class="table_th" data-key="mtype" width="15%">Maintenance Type</th> -->
+        <!-- <th class="table_th" data-key="assign_to" width="15%">Assigned To</th> -->
+        <th class="table_th" data-key="status" width="10%">Status</th>
+        <th class="table_th" data-key="output" width="10%">Output</th>
+        <th class="table_th" data-key="action" width="8%">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <!-- Branch -->
+        <td class="table_td" data-label="Branch">
+          <select name="branch_code" id="branch_code" class="form-select form-select-sm">
+            <option value="">--Select--</option>
+            
+          </select>
+        </td>
+
+        <!-- Date Range -->
+        <td class="table_td" data-label="Date Range">
+          <div class="d-flex gap-1">
+            <input type="date" name="from_date" id="from_date" placeholder="From" class="form-control form-control-sm datepick">
+            <input type="date" name="to_date" id="to_date" placeholder="To" class="form-control form-control-sm datepick">
+          </div>
+        </td>
+
+        <!-- Equipment / Type -->
+        <td class="table_td" data-label="Equipment">
+          <input id="equ_code" name="equ_code" list="equ-code" autocomplete="off" placeholder="Equipment Code" class=" py-1 form-control textFieldMedium">
+          <datalist id="equ-code">
+          </datalist>
+        </td>
+        <!--  Type -->
+        <!-- <td class="table_td" data-label="Type">
+          <select name="mt_type" id="mt_type" class="form-select form-select-sm">
+            <option value="">--Select--</option>
+            
+          </select>
+        </td> -->
+
+        <!-- Assigned To -->
+        <!-- <td class="table_td" data-label="Assigned To">
+          <select name="assign_to" id="assign_to" class="form-select form-select-sm">
+            <option value="">--Select--</option>
+         
+          </select>
+        </td> -->
+
+        <!-- Status -->
+        <td class="table_td" data-label="Status">
+          <select name="rstatus" id="rstatus" class="form-select form-select-sm">
+            <option value="">All</option>
+            <option value="Open">Open</option>
+            <option value="Closed">Closed</option>
+            <!-- <option value="In Progress">In Progress</option>
+            <option value="On Hold">On Hold</option> -->
+            <option value="unas">Unassigned</option>
+          </select>
+        </td>
+        
+
+        <!-- Output -->
+        <td class="table_td" data-label="Output">
+          <select name="output" id="output" class="form-select form-select-sm">
+            <option value="html">On Screen</option>
+            <!-- <option value="pdf">PDF</option>-->
+            <!-- <option value="excel">Excel</option>  -->
+          </select>
+        </td>
+
+        <!-- Action -->
+        <td class="table_td text-center" data-label="Action">
+          <button type="button" id="search" class="btn btn-primary btn-sm px-3">
+            <i class="fas fa-search"></i> Search
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div class="text-end">
+  <span class="text-success report-table-export p-1"  role="button" 
+        id="show-excel" data-table="mpReqTable" style="display:none;">
+    <i class="fas fa-file-excel"></i> Excel
+  </span>
+</div>
+
+
+<!-- ================================Main Table================================== -->
+   <div id="mpReqTable"></div>
+
+  </div>
+
+
+ <!-- View Modal -->
+<div class="modal fade" id="viewCompModal" tabindex="-1" aria-labelledby="viewCompModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow-lg rounded-4">
+      <div class="modal-header bg-primary text-white rounded-top-4">
+        <h5 class="modal-title fw-bold" id="viewCompModalLabel">
+          <i class="fas fa-clipboard-list me-2"></i> Maintenance Complaint Details
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <table class="table table-striped align-middle mb-0">
+          <tbody id="compDetails"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-secondary btn-sm rounded-pill px-4" data-bs-dismiss="modal">
+          <i class="fas fa-times me-1"></i> Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- Footer -->
+  <footer id="footer_bg42">
+    <table width="99%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class="footer_left px-2">
+          <div class="title_5 float-start">
+            <a href="../../user_help/index.htm" target="_blank" class="userHelp">&nbsp;User Help</a>
+          </div>
+        </td>
+        <td class="cmp_dev">
+          <div class="title_5 float-end">
+            <div class="footer_text">
+              Powered by <a href="http://www.minervasoft.net" class="minerva_brand" target="_blank">Minerva Soft</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </footer>
+<!-- Delete Confirmation Modal -->
+<div id="confirmModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <p id="confirmText">Are you sure you want to delete?</p>
+    <div class="btn-group">
+      <button id="save" class="btn btn-danger btn-sm">Yes, Delete</button>
+      <button id="cancel" class="btn btn-secondary btn-sm">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+  <script src="./js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="./js/common_mp.js"></script>
+  <script src="./js/common_data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script>
+
+   document.addEventListener('DOMContentLoaded', () => {
+  fetchCommonData();
+
+  const filterForm = document.getElementById('report_form');
+  const search = document.getElementById('search');
+  const tbody = document.getElementById('mpReqList');
+  // fetchRequests();
+
+  // Handle filter form submission
+  search.addEventListener('click', (e) => {
+    e.preventDefault();
+    fetchRequests();
+  });
+  
+  
+  async function fetchRequests() {
+    const formData = new FormData(filterForm);
+    formData.append('csrf_token', csrfToken);
+  try {
+    displayLoader('show');
+    if (!csrfToken) {
+      alertMessage('Token missing or invalid', 'e');
+      displayLoader('hide');
+      return;
+    }
+    const res = await fetch('./api/mp_request_report.php', {
+      method: 'POST',
+      headers: { 'X-CSRF-Token': csrfToken },
+      body: formData
+    });
+
+    const result = await res.json();
+
+    const container = document.getElementById("mpReqTable");
+    container.innerHTML = ""; // clear old content
+
+    // Create table
+    const table = document.createElement("table");
+    table.className = "report_table w-100";
+
+    // Create header
+    const thead = document.createElement("thead");
+    thead.className = "colorHeader";
+    thead.style.height = "45px";
+    thead.innerHTML = `
+      <tr>
+        <th class="report_table_th" data-key="branch_name">Branch</th>
+        <th class="report_table_th" data-key="product_name">Equipment</th>
+        <th class="report_table_th" data-key="cref_no">Reference No</th>
+        <th class="report_table_th" data-key="desc_prob">Description</th>
+        <th class="report_table_th" data-key="comp_status">Status</th>
+        <th class="report_table_th" data-key="e_time">Complaint Date</th>
+        <th class="report_table_th" data-key="action">Action</th>
+      </tr>`;
+    table.appendChild(thead);
+
+    // Create body
+    const tbody = document.createElement("tbody");
+    tbody.id = "mpReqList";
+
+    if (result.success && Array.isArray(result.data) && result.data.length > 0) {
+      result.data.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="report_table_td" data-label="Branch">${row.branch || '-'}</td>
+          <td class="report_table_td" data-label="Equipment">${row.product || '-'}</td>
+          <td class="report_table_td" data-label="Request No">${row.cref_no || '-'}</td>
+          <td class="report_table_td" data-label="Description">${row.desc_prob || '-'}</td>
+          <td class="report_table_td" data-label="Status">${row.comp_status || '-'}</td>
+          <td class="report_table_td" data-label="Created Date">${row.e_time || '-'}</td>
+          <td class="report_table_td" data-label="Action">
+            <a href="#" data-id="${row.comp_id}" class="viewBtn" title="View Details">
+              <i class="fas fa-eye"></i>
+            </a>
+            <a href="#" class="mx-1 assignBtn ${row.is_assigned === true ? 'd-none' : ''}" data-id="${row.comp_id}" title="Assign">
+              <i class="fas fa-hammer"></i>
+            </a>
+            <a href="#" class="mx-1 editBtn" data-id="${row.comp_id}" title="Edit">
+              <i class="fas fa-edit"></i>
+            </a>
+            <a href="#" class="mx-1 text-danger deleteBtn" data-id="${row.comp_id}" title="Delete">
+              <i class="fas fa-trash-alt"></i>
+            </a>
+          </td>`;
+        tbody.appendChild(tr);
+      });
+    } else {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted py-3">No Complaint found.</td></tr>`;
+    }
+
+    table.appendChild(tbody);
+    container.appendChild(table);
+
+    // ====== Handle all button clicks ======
+    tbody.addEventListener('click', async (e) => {
+      const editBtn = e.target.closest('.editBtn');
+      const deleteBtn = e.target.closest('.deleteBtn');
+      const assignBtn = e.target.closest('.assignBtn');
+      const viewBtn = e.target.closest('.viewBtn');
+
+        if (viewBtn) {
+          e.preventDefault();
+          const id = viewBtn.dataset.id;
+          if (!csrfToken) {
+                alertMessage('Token missing or invalid', 'e');
+                displayLoader('hide');
+                return;
+              }
+              const formData = new FormData();
+              formData.append('action', 'view');
+              formData.append('comp_id', id);
+              formData.append('csrf_token', csrfToken);
+              displayLoader('show');
+        try {
+
+            const res = await fetch(`./api/mp_request_report.php`,{
+              method: 'POST',
+              headers: { 'X-CSRF-Token': csrfToken },
+              body: formData
+            });
+            const data = await res.json();
+            console.log(data.data);
+            if (!data || !data.data) {
+              displayLoader('hide');
+              alert("No data found for this plan.");
+              return;
+            }
+
+            const row = data.data[0];
+            const attachmentHtml = row.attachment
+                ? row.attachment
+                    .replace(/^\{|\}$/g, '') // remove { }
+                    .split(',')
+                    .map(f => {
+                      const filename = f.trim();
+                      const displayName = filename.split('_').slice(1).join('_');
+                      return `<a href="uploads/request/${filename}" 
+                                target="_blank" 
+                                class="text-decoration-none text-primary">
+                                ${displayName}
+                              </a>`;
+                    })
+                    .join('<br>')
+                : '-';
+            // 🧠 Build HTML dynamically
+            const html = `
+              <tr><th>Reference No.</th><td>${row.cref_no || '-'}</td></tr>
+              <tr><th>Branch</th><td>${row.branch || '-'}</td></tr>
+              <tr><th>Equipment</th><td>${row.product || '-'}</td></tr>
+              <tr><th>Status</th><td>${row.comp_status || '-'}</td></tr>
+              <tr><th>Remarks</th><td>${row.desc_prob || '-'}</td></tr>
+              <tr><th>Created Date</th><td>${row.e_time || '-'}</td></tr>
+              <tr><th>Attachment</th><td>${attachmentHtml}</td></tr>
+
+              `;
+              // <tr><th>Attachment</th><td>${row.attachment ? `<a href="uploads/request/${row.attachment}" target="_blank">${row.attachment}</a>` : '-'}</td></tr>
+              document.getElementById('compDetails').innerHTML = html;
+            // 🟢 Show modal
+            const modal = new bootstrap.Modal(document.getElementById('viewCompModal'));
+            modal.show();
+            displayLoader('hide');
+          } catch (err) {
+            console.error(err);
+            displayLoader('hide');
+            alert("Failed to load details.");
+          }
+        }
+
+      // 🔹 Edit
+      if (editBtn) {
+        e.preventDefault();
+        const id = editBtn.dataset.id;
+        window.open(`mp_request.html?comp_id=${id}&action=edit`, '_blank');
+        return;
+      }
+
+      // 🔹 Delete
+      if (deleteBtn) {
+        e.preventDefault();
+        const id = deleteBtn.dataset.id;
+        showConfirm('Are you sure you want to delete this Complaint?', async () => {
+          const delForm = new FormData();
+          delForm.append('action', 'del');
+          delForm.append('comp_id', id);
+          delForm.append('csrf_token', csrfToken);
+
+          try {
+            displayLoader('show');
+            if (!csrfToken) {
+            alertMessage('Token missing or invalid', 'e');
+            displayLoader('hide');
+            return;
+            }
+            const res = await fetch('./api/mp_request.php', { method: 'POST',headers: { 'X-CSRF-Token': csrfToken }, body: delForm });
+            const result = await res.json();
+            if (result.success) {
+              alertMessage('Complaint deleted successfully', 's');
+              fetchRequests(); // reload table
+            } else {
+              alertMessage(result.message || 'Failed to delete Complaint', 'e');
+            }
+            displayLoader('hide');
+          } catch (err) {
+            console.error('Error deleting Complaint:', err);
+            alertMessage('Error deleting Complaint', 'e');
+            displayLoader('hide');
+          }
+        });
+        return;
+      }
+
+      // 🔹 Assign
+      if (assignBtn) {
+        e.preventDefault();
+        const id = assignBtn.dataset.id;
+        window.open(`wo_order.html?comp_id=${id}`, '_blank');
+        return;
+      }
+    });
+
+    // ✅ Show button only when table has rows
+          const showExcel = document.getElementById('show-excel');
+          // const table = document.getElementById(showExcel.dataset.table);
+
+          if (table && table.querySelectorAll('tbody tr').length > 0) {
+            showExcel.style.display = 'inline-block';
+          }
+
+          // ✅ Click event to trigger Excel export
+          if (!showExcel.dataset.bound) {
+            showExcel.addEventListener('click', () => {
+              const tableId = showExcel.dataset.table;
+              exportTableToExcel(tableId, "Complaint Report", ["Action"]);
+            });
+            showExcel.dataset.bound = true; // prevent duplicate listeners
+          }
+
+
+
+    displayLoader('hide');
+  } catch (err) {
+    console.error('Error fetching maintenance requests:', err);
+    const container = document.getElementById("mpReqTable");
+    container.innerHTML = `<p class="text-center text-muted py-3">Failed to load data</p>`;
+    alertMessage('Failed to load data', 'e');
+    displayLoader('hide');
+  }
+}
+
+
+
+});
+  </script>
+</body>
+</html>

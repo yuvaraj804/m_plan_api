@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+ 
+ <html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      type="text/css"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="./css/style.css" rel="stylesheet" type="text/css" />
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    
+  </head>
+  
+      <body>
+  <div class="main_header d-flex justify-content-between">
+    <div class="headerLeft">
+      <div class="menuIcon menuwrap">
+        <i id="menuIcon" class="fa fa-bars" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas"></i>
+      </div>
+      <div class="brand-copyright">
+        <span class="mobile_view">
+          <a href="http://www.minervasoft.net" class="minerva_brand" target="_blank">Minerva Soft</a>
+        </span>
+      </div>
+    </div>
+  
+    <div class="d-flex justify-content-end align-items-center gap-2">
+      <span class="welcomeTxt"></span>
+      <i class="fas fa-arrow-right-from-bracket"></i>
+      
+    </div>
+    <i class="fas fa-comment" id="show-last-error" title="View Last Error" ></i>
+  
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
+      <div class="offcanvas-header text-white shadow-sm">
+        <h5 class="offcanvas-title d-flex align-items-center" id="offcanvasLabel">
+          <i class="fas fa-cogs me-2"></i> MINT
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+    
+      <div class="offcanvas-body bg-light">
+        <ul class="menu-list list-unstyled mb-0">
+    
+          <li class="menu-item mb-1">
+            <a href="./" class="menu-link">
+              <i class="fas fa-home me-2"></i> Home
+            </a>
+          </li>
+    
+          <li class="menu-section mt-3 mb-1">Maintenance</li>
+          <li class="menu-item">
+            <a href="mp_form.html" class="menu-link"><i class="fas fa-wrench me-2"></i> Maintenance Plan</a>
+          </li>
+          <li class="menu-item">
+            <a href="mp_request.html" class="menu-link"><i class="fas fa-exclamation-circle me-2"></i> Complaint</a>
+          </li>
+    
+          <li class="menu-section mt-3 mb-1">Reports</li>
+          <li class="menu-item">
+            <a href="mplan_report.html" class="menu-link"><i class="fas fa-file-contract me-2"></i> Maintenance Report</a>
+          </li>
+          <li class="menu-item">
+            <a href="mp_request_report.html" class="menu-link"><i class="fas fa-file-alt me-2"></i> Complaint Report</a>
+          </li>
+          <li class="menu-item">
+            <a href="wo_order_report.html" class="menu-link"><i class="fas fa-file-invoice me-2"></i> Work Order Report</a>
+          </li>
+    
+        </ul>
+      </div>
+    </div>
+    
+    
+  </div>
+  
+        <div class="container formContainer">
+          <div class="w-100 d-flex justify-content-between align-items-center mb-3">
+            <p class="page-title m-0">Maintenance Plan</p>
+            <a class="text-decoration-none " target="_blank" href="mplan_report.html">View Report</a>
+        </div>
+          <div id="alert-message" class="alert alert-dismissible fade show"><a href="javascript:;" class="btn-close" style="font-size: 12px;" aria-label="close"></a><span id="alert-msg"></span></div>
+ 
+          <div class="card bg-light text-dark shadow">
+              <div class="card-body">
+                <form id="mpForm" enctype="multipart/form-data" method="post">
+                  <!-- Branch Code -->
+                  <div class="row inputWrap">
+                    <label for="branch_code" class="col-12 col-sm-4 col-form-label"
+                      >Branch Code</label
+                    >
+                    <div class="col-12 col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap"
+                          ><i class="fas fa-code-branch"></i></span
+                        >
+                        <select class="form-select selectp textFieldMedium" required id="branch_code" name="branch_code">
+                          <option class="option" disabled selected>--Select--</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+    
+                  <!-- Production Stage -->
+                  <div id="prodStage" class="row inputWrap d-none">
+                    <label for="ps_code" class="col-12 col-sm-4 col-form-label"
+                      >Production Stage</label
+                    >
+                    <div class="col-12 col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap"
+                          ><i class="fa-solid fa-city"></i></span>
+                        <select
+                        class="form-select textFieldMedium" required
+                        id="ps_code" name="ps_code"
+                      >
+                        <option disabled selected>--Select--</option>
+                      </select>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Plan Reference Number -->
+                  <div id="mref" class="row inputWrap d-none">
+                    <label for="mref_no" class="col-12 col-sm-4 col-form-label"
+                      >Reference no.</label
+                    >
+                    <div class="col-12 col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap"
+                          ><i class="fa-regular fa-file-lines"></i></span
+                        >
+                        <input 
+                          type="text"
+                          class="form-control textFieldSmall"
+                          id="mref_no"
+                          name="mref_no" required
+                          readonly
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Plan Name -->
+                  <div class="row inputWrap">
+                    <label for="plan_name" class="col-sm-4 col-form-label"
+                      >Plan name</label
+                    >
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap">
+                            <i class="fa-solid fa-highlighter"></i>
+                        </span>
+                        <input
+                          type="text"
+                          class="form-control textFieldMedium"
+                          id="plan_name" required
+                          name="plan_name"
+                          autocomplete="off"
+                          placeholder="Plan name"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Equipment Code -->
+                  <div class="row inputWrap">
+                    <label for="equ-code" class="col-sm-4 col-form-label"
+                      >Equipment Code</label
+                    >
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap">
+                            <i class="fa-regular fa-rectangle-list"></i>
+                        </span>
+                       
+                        <input id="equ_code" name="equ_code" list="equ-code" required autocomplete="off" placeholder="Equipment Code" class="form-control textFieldMedium" required>
+                        <datalist id="equ-code">
+                        </datalist>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <!-- maintenance type -->
+                  <div class="row inputWrap">
+                    <label for="mt_type" class="col-sm-4 col-form-label"
+                      >Maintenance Type</label
+                    >
+                    <div class="col-sm-8">
+                      <div id ="validate" class="input-group">
+                        <span class="input-group-text iconWrap">
+                            <i class="fa-solid fa-list"></i>
+                        </span>
+                        <select
+                          id="mt_type" name="mt_type"
+                          class="form-select textFieldMedium" required           
+                        >
+                          <option disabled selected>--Select--</option>
+                          
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                
+                  <!-- Start Date -->
+                  <div class="row inputWrap mb-3">
+                    <label for="start_date" class="col-12 col-sm-4 col-form-label">Start Date</label>
+                    <div class="col-12 col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap"><i class="fa fa-calendar-days"></i></span>
+                        <input
+                          type="date" required
+                          class="form-control datepick textFieldSmall"
+                          id="start_date" 
+                          name="start_date"
+                          autocomplete="off"
+                        />
+                      </div>
+                    </div>
+                  </div>
+    
+    
+                  <!-- End Date -->
+                    <div class="row inputWrap mb-3">
+                      <label for="end_date" class="col-12 col-sm-4 col-form-label">End Date</label>
+                      <div class="col-12 col-sm-8">
+                        <div class="input-group">
+                          <span class="input-group-text iconWrap"><i class="fa-regular fa-calendar-xmark"></i></span>
+                          <input
+                            type="date"
+                            class="form-control datepick textFieldSmall"
+                            id="end_date" required
+                            name="end_date"
+                            autocomplete="off"
+                          />
+                        </div>
+                      </div>
+                    </div>
+    
+    
+                  <!-- Frequency -->
+                  <div class="row inputWrap mb-3">
+                    <label for="freq_type_group" class="col-12 col-sm-4 col-form-label">Frequency</label>
+                    <div class="col-12 col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap">
+                          <i class="fa-solid fa-business-time"></i>
+                        </span>
+                        <select id="freq_type" class="form-select textFieldSmall">
+                          <option value="100" selected>Every</option>
+                        </select>
+                        <select id="freq_period" class="form-select textFieldSmall">
+                          <option value="11">Day</option>
+                          <option value="12">Week</option>
+                          <option value="13">Month</option>
+                          <option value="14">Quarterly</option>
+                          <option value="15">Half yearly</option>
+                          <option value="16">Year</option>
+                        </select>
+                        <select id="freq_no" class="form-control textFieldSmall">
+                          <option disabled selected>-- Select --</option>
+                        </select>
+    
+                        <select id="freq_month" class="form-control textFieldSmall d-none">
+                          <option disabled selected>-- Select Month --</option>
+                        </select>
+                        <select id="freq_day" class="form-control textFieldSmall d-none">
+                          <option disabled selected>-- Select Day --</option>
+                        </select>
+                        <select id="freq_week_num" class="form-control textFieldSmall d-none">
+                          <option disabled selected>-- Select Week # --</option>
+                        </select>
+                        <select id="freq_weekday" class="form-control textFieldSmall d-none">
+                          <option  disabled selected>-- Select Weekday --</option>
+                        </select>
+                      </div>
+                      <span id="freqError" class="text-danger small mt-1"></span>
+                    </div>
+                  </div>
+    
+    
+                  <!-- Next Due -->
+                  <div class="row inputWrap mb-3">
+                    <label for="next_due" class="col-12 col-sm-4 col-form-label">Next Due</label>
+                    <div class="col-12 col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap"><i class="fa-regular fa-calendar-check"></i></span>
+                        <input
+                          type="date" readonly required
+                          class="form-control datepicknext textFieldSmall"
+                          id="next_due" name="next_due" 
+                        />
+                      </div>
+                    </div>
+                  </div>
+    
+                  <!-- Assigned Technician -->
+                  <div class="row inputWrap">
+                    <label for="assign_to" class="col-sm-4 col-form-label"
+                      >Assigned Technician</label
+                    >
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap">
+                            <i class="fa-solid fa-user-tie"></i></span>
+                        <select  class="form-select textFieldMedium"
+                          name="assign_to" required
+                          id="assign_to"
+                        >
+                          <option disabled selected>--Select--</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <!-- Technical Description -->
+                  <div class="row inputWrap">
+                    <label for="tdesc" class="col-12 col-sm-4 col-form-label"
+                      >Technical Description</label
+                    >
+                    <div class="col-12 col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap"
+                          ><i class="fa-regular fa-comment-dots"></i></span>
+                        <textarea name="tdesc" id="tdesc" required placeholder="Description here" class="form-control textFieldMedium" required></textarea>
+                        
+                      </div>
+                    </div>
+                  </div> 
+                  <!-- priority -->
+                  <div class="row inputWrap">
+                    <label for="priority" class="col-12 col-sm-4 col-form-label"
+                      >Priority</label
+                    >
+                    <div class="col-12 col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap"
+                          ><i class="fa-solid fa-arrow-up-short-wide"></i></span>
+                        <select
+                          class="form-select textFieldSmall" required
+                          id="priority" name="priority"
+                        >
+                          <option disabled selected>--Select--</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div> 
+                  <!-- Remarks -->
+                  <div class="row inputWrap">
+                    <label for="remark" class="col-12 col-sm-4 col-form-label"
+                      >Remarks</label
+                    >
+                    <div class="col-12 col-sm-8">
+                      <div class="input-group">
+                        <span class="input-group-text iconWrap"
+                          ><i class="fa-solid fa-pencil"></i></span>
+                        <textarea id="remark" name="remark" class="form-control textField" placeholder="Leave a Remarks here" ></textarea>
+                      </div>
+                    </div>
+                  </div> 
+                  <!-- Attachment -->
+                  <div class="row inputWrap">
+                    <label for="attach" class="col-12 col-sm-4 col-form-label"
+                      >Attachment</label
+                    >
+                    <div class="col-12 col-sm-8">
+                        <div class="mb-3">
+                          <div class="input-group">
+                            <span class="input-group-text iconWrap"
+                            ><i class="fa-regular fa-folder-open"></i></span
+                            >
+                            <input id="attach" class="form-control textFieldMedium" type="file" name="attachment[]" multiple>
+                          </div>
+                          <div id="existingAttachments" class="mb-2"></div>
+                          </div>
+                    </div>
+                    </div>
+                    <!-- Save button -->
+                    <div class="d-flex gap-3 justify-content-center mt-4">
+                      <!-- <input type="hidden" name="mplan_id" id="mplan_id"> -->
+                     <button type="submit" id="submit" class="form-control w-25 bg-primary text-light">Save</button>
+                     <!-- <input type="hidden" name="csrfToken" value=""> -->
+                     <button type="reset" class="form-control w-25 bg-secondary text-light">Cancel</button>
+                    </div>
+                  
+                     <br>
+    
+                </form>
+              </div>
+            </div>
+        </div>
+    
+        <footer id="footer_bg42" >
+
+            <table width="99%" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td  class="footer_left px-2" >
+                        <div class="title_5 float-start" >  
+                           
+                            &nbsp;
+                            <a href="../../user_help/index.htm" target="_blank" class="userHelp" >&nbsp;User Help</a>
+                        </div>
+                        &nbsp;&nbsp;
+                        <div class="hide_td foot-left">Last Login: </div>
+                    </td>
+                    
+                    <td  class="cmp_dev">
+                        <div class="title_5 float-end">
+                            <div class="footer_text">Powered by &nbsp;
+                                <a href="http://www.minervasoft.net" class="minerva_brand"  target="_blank">Minerva Soft</a>&nbsp;&nbsp;
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            
+        </footer>
+        <!-- Confirmation Modal -->
+<div id="confirmModal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <p id="confirmText">Are you sure you want to Save ?</p>
+    <div class="btn-group">
+      <button id="save" class="btn btn-primary btn-sm">Yes, Save</button>
+      <button id="cancel" class="btn btn-secondary btn-sm">Cancel</button>
+    </div>
+  </div>
+</div>
+        
+        <script src="./js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script src="./js/common_mp.js"></script>
+        <script src="./js/common_data.js"></script>
+    
+    
+    <script>
+
+   
+      // DOM Elements
+      const startDateInput = document.getElementById('start_date');
+      const freqTypeSelect = document.getElementById('freq_type');
+      const freqPeriodSelect = document.getElementById('freq_period');
+      const freqNoInput = document.getElementById('freq_no');
+      const freqWeekdaySelect = document.getElementById('freq_weekday');
+      const freqMonthSelect = document.getElementById('freq_month');
+      const freqDaySelect = document.getElementById('freq_day');
+      const freqWeekNumSelect = document.getElementById('freq_week_num');
+      const nextDueDateInput = document.getElementById('next_due');
+      const freqError = document.getElementById('freqError');
+    
+      const dayMap = {
+          0: 'Sunday', 1: 'Monday', 2: 'Tuesday',
+          3: 'Wednesday', 4: 'Thursday', 5: 'Friday', 6: 'Saturday'
+      };
+    
+      const monthNames = {
+          1: 'Jan', 2: 'Feb', 3: 'Mar', 4: 'Apr', 5: 'May', 6: 'Jun',
+          7: 'Jul', 8: 'Aug', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dec'
+      };
+    
+    
+    
+     
+      document.addEventListener('DOMContentLoaded', () => {
+          fetchCommonData();
+          calculateNextDueDate();
+          
+          //after selecting branch - production-stage & reference no. will be fetched
+          const el = (id) => document.getElementById(id);
+          el("branch_code").addEventListener("change", function () {
+            el("prodStage").classList.remove("d-none");
+            el("prodStage").classList.add("d-flex");
+            el("mref").classList.remove("d-none");
+            el("mref").classList.add("d-flex");
+          });
+      
+     
+        // Setup Flatpickr
+        flatpickr(".datepick", {
+            dateFormat: "d/m/Y",
+            allowInput: true,
+            onChange: calculateNextDueDate
+        });
+    
+        flatpickr(".datepicknext", {
+            dateFormat: "d/m/Y",
+            allowInput: false,
+            clickOpens: true, // open calendar on click
+            static: false, // ensure calendar appears normally
+            mode: "single",
+        });
+    
+        // Event Listeners
+        freqPeriodSelect.addEventListener('change', updateDynamicInputs);
+        freqNoInput.addEventListener('change', updateFurtherDynamicInputs);
+        freqWeekdaySelect.addEventListener('change', calculateNextDueDate);
+        freqMonthSelect.addEventListener('change', calculateNextDueDate);
+        freqDaySelect.addEventListener('change', calculateNextDueDate);
+        freqWeekNumSelect.addEventListener('change', calculateNextDueDate);
+        freqTypeSelect.addEventListener('change', calculateNextDueDate);
+        startDateInput.addEventListener('change', calculateNextDueDate);
+    
+        // Init UI
+        if (!startDateInput.value) {
+            const today = new Date();
+            const d = String(today.getDate()).padStart(2, '0');
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const y = today.getFullYear();
+            startDateInput.value = `${d}/${m}/${y}`;
+        }
+    
+        updateDynamicInputs();
+    
+        
+        
+      });
+      
+    </script>
+    
+    <script >
+      
+      function populateSelect(el, items, placeholder = '-- Select --') {
+            let html = `<option disabled selected value="">${placeholder}</option>`;
+            items.forEach(({ value, label }) => {
+                html += `<option value="${value}">${label}</option>`;
+            });
+            el.innerHTML = html;
+        }
+     async function calculateNextDueDate() {
+            freqError.innerText = '';
+            nextDueDateInput.value = '';
+            const rawDate = startDateInput.value; // e.g. "29/09/2025"
+        const [day, month, year] = rawDate.split('/');
+    
+        // Validate date parts (optional safety check)
+        if (!day || !month || !year) {
+            freqError.innerText = 'Invalid start date format';
+            return;
+        }
+    
+    // Convert to format PHP expects: "YYYY-MM-DD"
+          const startDate = `${year}-${month}-${day}`;
+    
+            // const startDate = startDateInput.value;
+            const period = freqPeriodSelect.value;
+            const freqNo = freqNoInput.value;
+            const freqWeekday = freqWeekdaySelect.value;
+            const freqMonth = freqMonthSelect.value;
+            const freqDay = freqDaySelect.value;
+            const freqWeekNum = freqWeekNumSelect.value;
+    
+            if (!startDate) {
+                freqError.innerText = 'Please select a start date.';
+                return;
+            }
+    
+            if (period !== '11' && (!freqNo || freqNo === '-- Select --')) {
+                freqError.innerText = 'Please complete the frequency details.';
+                return;
+            }
+    
+            if (['13', '14', '15'].includes(period) && !freqWeekday) {
+                freqError.innerText = 'Please select the specific weekday.';
+                return;
+            }
+    
+            if (period === '16') {
+                if (freqNo === 'yearly_date' && (!freqMonth || !freqDay)) {
+                    freqError.innerText = 'Please select both month and day.';
+                    return;
+                }
+                if (freqNo === 'yearly_week' && (!freqWeekNum || !freqWeekday)) {
+                    freqError.innerText = 'Please select week number and weekday.';
+                    return;
+                }
+            }
+            if (!csrfToken) {
+                alertMessage('Token missing or invalid', 'e');
+                displayLoader('hide');
+                return;
+              }
+            const formData = new FormData();
+            formData.append('action', 'calc_next_due');
+            formData.append('startDate', startDate);
+            formData.append('freqPeriod', period);
+            formData.append('freqNo', freqNo);
+            formData.append('freqWeekday', freqWeekday || '');
+            formData.append('freqMonth', freqMonth || '');
+            formData.append('freqDay', freqDay || '');
+            formData.append('freqWeekNum', freqWeekNum || '');
+            formData.append('csrf_token', csrfToken);
+    
+            try {
+                const response = await fetch('./api/mp_form.php', {
+                    method: 'POST',
+                    headers: { 'X-CSRF-Token': csrfToken },
+                    body: formData
+                });
+    
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    
+                const result = await response.json();
+    
+                const [year, month, day] = result.nextDue.split('-');
+                const formattedDate = `${day}/${month}/${year}`; // Format: DD/MM/YYYY
+    
+                nextDueDateInput.value = formattedDate;
+            } catch (e) {
+                freqError.innerText = 'An error occurred while calculating the next due date.';
+                console.error(e);
+            }
+        }
+    
+    
+
+  function resetSelect(el, placeholder = '-- Select --') {
+            el.innerHTML = `<option disabled selected value="">${placeholder}</option>`;
+        }
+function updateDynamicInputs() {
+   
+   [freqNoInput, freqWeekdaySelect, freqMonthSelect, freqDaySelect, freqWeekNumSelect]
+       .forEach(el => {
+           el.classList.add('d-none');
+           resetSelect(el);
+       });
+
+   const period = freqPeriodSelect.value;
+
+   if (period === '11') {
+       // Daily: no extra input needed
+   } else if (period === '12') {
+       // Weekly: show weekday select
+       freqNoInput.classList.remove('d-none');
+       populateSelect(freqNoInput,
+           Array.from({ length: 7 }, (_, i) => ({ value: i, label: dayMap[i] })),
+           '-- Select Weekday --'
+       );
+   } else if (['13', '14', '15'].includes(period)) {
+       // Monthly/Quarterly/Half-Yearly: week occurrence + weekday
+       freqNoInput.classList.remove('d-none');
+       populateSelect(freqNoInput, [
+           { value: '1', label: '1st' },
+           { value: '2', label: '2nd' },
+           { value: '3', label: '3rd' },
+           { value: '4', label: '4th' },
+           { value: 'last', label: 'Last' }
+       ], '-- Select Occurrence --');
+   } else if (period === '16') {
+       // Yearly: specific date or nth week
+       freqNoInput.classList.remove('d-none');
+       populateSelect(freqNoInput, [
+           { value: 'yearly_date', label: 'Specific Date' },
+           { value: 'yearly_week', label: 'Nth Week of Year' }
+       ], '-- Select Recurrence Type --');
+   }
+
+   updateFurtherDynamicInputs();
+}
+
+function updateFurtherDynamicInputs() {
+  return new Promise((resolve) => {
+    // Always fully populate all dropdowns once
+    populateSelect(
+      freqWeekdaySelect,
+      Array.from({ length: 7 }, (_, i) => ({ value: i, label: dayMap[i] })),
+      '-- Select Weekday --'
+    );
+    populateSelect(
+      freqMonthSelect,
+      Array.from({ length: 12 }, (_, i) => ({ value: i + 1, label: monthNames[i + 1] })),
+      '-- Select Month --'
+    );
+    populateSelect(
+      freqDaySelect,
+      Array.from({ length: 31 }, (_, i) => ({ value: i + 1, label: i + 1 })),
+      '-- Select Day --'
+    );
+    populateSelect(
+      freqWeekNumSelect,
+      Array.from({ length: 53 }, (_, i) => ({ value: i + 1, label: `Week ${i + 1}` })),
+      '-- Select Week # --'
+    );
+
+    // Hide all initially
+    [freqWeekdaySelect, freqMonthSelect, freqDaySelect, freqWeekNumSelect]
+      .forEach(el => el.classList.add('d-none'));
+
+    const period = freqPeriodSelect.value;
+    const freqNo = freqNoInput.value;
+
+    // Show only what’s relevant
+    if (['13', '14', '15'].includes(period) && freqNo) {
+      freqWeekdaySelect.classList.remove('d-none'); // monthly / quarterly / half-year
+    } else if (period === '16') {
+      if (freqNo === 'yearly_date') {
+        freqMonthSelect.classList.remove('d-none');
+        freqDaySelect.classList.remove('d-none');
+      } else if (freqNo === 'yearly_week') {
+        freqWeekNumSelect.classList.remove('d-none');
+        freqWeekdaySelect.classList.remove('d-none');
+      }
+    }
+
+    calculateNextDueDate();
+    setTimeout(resolve, 100);
+  });
+}
+
+async function prefillFrequencyInputs(freqText) {
+  if (!freqText) return;
+  const text = freqText.toLowerCase().trim();
+
+  // Reset all values
+  [freqPeriodSelect, freqNoInput, freqWeekdaySelect, freqMonthSelect, freqDaySelect, freqWeekNumSelect]
+    .forEach(el => el.value = '');
+
+  // Detect main period
+  if (text.includes('half-year')) freqPeriodSelect.value = '15';
+  else if (text.includes('quarter')) freqPeriodSelect.value = '14';
+  else if (text.includes('month')) freqPeriodSelect.value = '13';
+  else if (text.includes('week') && !text.includes('half')) freqPeriodSelect.value = '12';
+  else if (text.includes('day')) freqPeriodSelect.value = '11';
+  else if (text.includes('year')) freqPeriodSelect.value = '16';
+
+  // Wait for base UI setup
+  await new Promise(resolve => {
+    updateDynamicInputs();
+    setTimeout(resolve, 300);
+  });
+
+  const ordinals = { '1st': '1', '2nd': '2', '3rd': '3', '4th': '4', 'last': 'last' };
+  const days = {
+    sunday: 0, monday: 1, tuesday: 2, wednesday: 3,
+    thursday: 4, friday: 5, saturday: 6
+  };
+
+  // Set occurrence number
+  setTimeout(() => {
+    
+    for (const [word, val] of Object.entries(ordinals)) {
+      if (text.includes(word)) {
+        freqNoInput.value = val;
+        console.log('✅ Set freq_no:', val);
+        break;
+      }
+    }
+  }, 100);
+
+  // Handle yearly special
+  if (text.includes('year - week')) freqNoInput.value = 'yearly_week';
+  else if (text.includes('year -') && !text.includes('week')) freqNoInput.value = 'yearly_date';
+
+  // Populate everything and then toggle visibility
+  await updateFurtherDynamicInputs();
+
+  // // Set weekday
+  // for (const [dayName, val] of Object.entries(days)) {
+  //   if (text.includes(dayName)) {
+  //     freqWeekdaySelect.value = val;
+  //     console.log('✅ Set weekday:', dayName, freqWeekdaySelect.value);
+  //     break;
+  //   }
+  // }
+  await updateFurtherDynamicInputs();
+  for (const [dayName, val] of Object.entries(days)) {
+    if (text.includes(dayName)) {
+      freqWeekdaySelect.value = val;
+      console.log('✅ Set weekday:', dayName, freqWeekdaySelect.value);
+      break;
+    }
+  }
+  // Optional month/day for yearly_date
+  for (const [num, name] of Object.entries(monthNames)) {
+    if (text.includes(name.toLowerCase())) {
+      freqMonthSelect.value = num;
+    }
+  }
+  calculateNextDueDate();
+
+  // Recompute final label
+  const computed = calculateFrequencyString();
+  console.log("✅ Prefilled computed string:", computed);
+}
+
+    // put this BEFORE document.addEventListener
+    function calculateFrequencyString() {
+        const period = freqPeriodSelect.value;
+        const freqNo = freqNoInput.value;
+        const weekday = freqWeekdaySelect.value;
+        const month = freqMonthSelect.value;
+        const day = freqDaySelect.value;
+        const weekNum = freqWeekNumSelect.value;
+    
+        let freqText = "Every";
+    
+        if (period === '11') { 
+            freqText += " Day";
+        } else if (period === '12') { 
+            const dayName = dayMap[weekday] || dayMap[freqNo] || "";
+            freqText += " Week";
+            if (dayName) freqText += ` on ${dayName}`;
+        } else if (period === '13') { 
+            const dayName = dayMap[weekday] || "";
+            const occurrenceMap = { '1': '1st', '2': '2nd', '3': '3rd', '4': '4th', 'last': 'Last' };
+            const occurrence = occurrenceMap[freqNo] || '';
+            freqText += " Month";
+            if (occurrence && dayName) freqText += ` - ${occurrence} ${dayName}`;
+        } else if (period === '14') {
+            const dayName = dayMap[weekday] || "";
+            const occurrenceMap = { '1': '1st', '2': '2nd', '3': '3rd', '4': '4th', 'last': 'Last' };
+            const occurrence = occurrenceMap[freqNo] || '';
+            freqText += " Quarter";
+            if (occurrence && dayName) freqText += ` - ${occurrence} ${dayName}`;
+        } else if (period === '15') {
+            const dayName = dayMap[weekday] || "";
+            const occurrenceMap = { '1': '1st', '2': '2nd', '3': '3rd', '4': '4th', 'last': 'Last' };
+            const occurrence = occurrenceMap[freqNo] || '';
+            freqText += " Half-Year";
+            if (occurrence && dayName) freqText += ` - ${occurrence} ${dayName}`;
+        } else if (period === '16') {
+            if (freqNo === 'yearly_date') {
+                const monthName = monthNames[month] || "";
+                if (day && monthName) {
+                    freqText += ` Year on ${day} ${monthName}`;
+                } else {
+                    freqText += " Year";
+                }
+            } else if (freqNo === 'yearly_week') {
+                const dayName = dayMap[weekday] || "";
+                if (weekNum && dayName) {
+                    freqText += ` Year - Week ${weekNum} ${dayName}`;
+                } else {
+                    freqText += " Year";
+                }
+            } else {
+                freqText += " Year";
+            }
+        }
+    
+        return freqText;
+    }
+    
+
+    
+
+    </script>
+
+<!-- ============================================================= -->
+<script>
+
+  document.addEventListener('DOMContentLoaded', async () => {
+        if(!document.getElementById("mref_no").value){  // Generate random 3-digit number (100–999)
+          const randomThreeDigit = `MP${Math.floor(Math.random() * 900) + 100}`;
+          document.getElementById("mref_no").value = randomThreeDigit;}
+
+    // const csrfToken = document.querySelector('input[name="csrf_token"]')?.value;
+    const params = new URLSearchParams(window.location.search);
+        const mplan_id = params.get('mplan_id')??'';
+        const action = params.get('action')??'insert';
+
+    const form = document.getElementById('mpForm'); 
+        form.addEventListener('submit',async function (e) {
+            e.preventDefault();
+            // e.stopPropagation();
+            
+//     ========================     FORM  SUBMIT    ================================
+    
+      const form = document.getElementById('mpForm');
+      let formElements = form.querySelectorAll('input, select, textarea, button');
+      const formData = new FormData(form);
+      if (!csrfToken) {
+              alertMessage('Token missing or invalid', 'e');
+              displayLoader('hide');
+              return;
+              }
+      formData.append('action', action);
+      formData.append('mplan_id', mplan_id);
+
+//       const input = document.getElementById('attach');
+// console.log(input.files); // Must show FileList before fetch
+
+//       const files = input.files;
+//       for (let i = 0; i < files.length; i++) {
+//         formData.append('attachment[]', files[i]);
+//       }
+
+      const freqTypeValue = calculateFrequencyString();
+      
+      // Append it to the form data
+      formData.append("freq_type", freqTypeValue);
+      formData.append('csrf_token', csrfToken);
+      
+      
+      showConfirm('Are you sure you want to submit?', async () => {
+         try {
+          displayLoader('show'); 
+            const response = await fetch("./api/mp_form.php", {
+                 method: 'POST',
+                 headers: { 'X-CSRF-Token': csrfToken },
+                 body:  formData,
+    
+                 });
+                  let data = await response.json();
+            if (!response.ok) {
+                api_httpError({ response: { status: response.status, statusText: response.statusText } });
+                formElements.forEach(el => el.disabled = false); // Re-enable form fields on error
+                alertMessage('Error: ' + response.statusText, 'e');
+                displayLoader('hide');
+                return;
+            }
+                 
+            if (data.success) {
+                formElements.forEach(el => el.disabled = false);
+                // alertMessage(data.message||"success", 's');
+                alertMessage("Plan saved successfully.", 's','mp_form.html');
+            } else {
+                formElements.forEach(el => el.disabled = false);
+                alertMessage(data.message||"Failed to save. Please check the form.", 'e', null, 3000); 
+            }
+          displayLoader('hide');
+
+        } catch (error) {
+            formElements.forEach(el => el.disabled = false);
+            api_httpError(error);
+          displayLoader('hide');
+        }
+      });
+      });
+    
+//      =================== EDIT PRE FILL FORM===============================    //
+
+        if (mplan_id) {
+          if (!csrfToken) {
+            alertMessage('Token missing or invalid', 'e');
+            displayLoader('hide');
+            return;
+          }
+          const formData = new FormData();
+          // formData.append('action', '');
+          formData.append('mplan_id', mplan_id);
+          formData.append('csrf_token', csrfToken);
+          displayLoader('show');
+          
+        try {
+          const res = await fetch(`./api/mp_form_report.php`,{
+            method: 'POST',
+            headers: { 'X-CSRF-Token': csrfToken },
+            body: formData
+          });
+          const result = await res.json();
+          if (result.success && result.data) {
+            const data =result.data;
+            const map = {
+          // plan_name:data.
+          // mplan_id:data.mplan_id,
+          branch_code: data.branch,
+          mref_no: data.mref_no,
+          start_date: data.start_date,
+          end_date: data.end_date,
+          freq_type: data.freq_type,
+          tdesc:data.desc_prob,
+          remark: data.remark,
+          assign_to: data.assign_to,
+          priority:data.priority,
+          ps_code: data.pstage,
+          equ_code: data.equipment,
+          mt_type: data.mtype
+        };
+        // attachment: data.attachment,
+        const psCodeInput = document.getElementById('prodStage');
+        const mrefInput = document.getElementById('mref');
+        if (data.pstage) {
+          psCodeInput.classList.remove("d-none");
+          psCodeInput.classList.add("d-flex");
+          mrefInput.classList.remove("d-none");
+          mrefInput.classList.add("d-flex");
+        }
+        // fill text/textarea inputs
+        setTimeout(() => {
+        for (const [name, value] of Object.entries(map)) {
+          const el = document.querySelector(`[name="${name}"]`);
+          if (el) el.value = value || '';
+        }
+        if (data.freq_type) {
+          prefillFrequencyInputs(data.freq_type);
+          setTimeout(() => {
+    const t = calculateFrequencyString();
+    console.log("Recomputed:", t);
+  }, 150);
+  }
+      }, 50);
+
+   
+
+        // re-set flatpickr dates if initialized
+        document.querySelector('[name="start_date"]')._flatpickr.setDate(data.start_date, true);
+        document.querySelector('[name="end_date"]')._flatpickr.setDate(data.end_date, true);
+        // ===============attachment================
+        document.getElementById('attach').removeAttribute('required');
+        let attachArr = Array.isArray(data.attachment) ? data.attachment : [];
+
+        const existingAttachmentsDiv = document.getElementById('existingAttachments');
+        existingAttachmentsDiv.innerHTML = '';
+
+        attachArr.forEach((filename, idx) => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'd-flex align-items-center mb-1';
+            wrapper.innerHTML = `
+                <a href="./uploads/plan/${filename}" target="_blank">${filename}</a>
+                <i class="fas fa-trash ms-2 text-danger remove-att" style="cursor:pointer;" data-index="${idx}"></i>
+                <input type="hidden" id="attach_old" name="attach[]" value="${filename}">
+                `;
+            existingAttachmentsDiv.appendChild(wrapper);
+        });
+
+        // Remove button logic
+        existingAttachmentsDiv.querySelectorAll('.remove-att').forEach(icon => {
+              icon.addEventListener('click', () => {
+                  icon.parentElement.remove();
+              });
+          });
+
+        const remainingAttach = [];
+          document.querySelectorAll('#existingAttachments a').forEach(a => {
+            remainingAttach.push(a.textContent.trim());
+          });
+
+
+            if (action === 'view') {
+              document.querySelectorAll('input, select, textarea, button').forEach(el => {
+                if (!['button', 'hidden', 'submit'].includes(el.type)) el.disabled = true;
+              });
+            }
+          } else {
+            console.warn('No data found for this plan.');
+          }
+          displayLoader('hide');
+          } catch (err) {
+          console.error('Error loading plan:', err);
+        }
+      }
+      // if (data.attachment) {
+        //     attachArr = data.attachment.replace(/^{|}$/g, '').split(',');
+        //     attachArr = attachArr.map(s => s.trim());
+        // }
+
+        
+
+
+    });
+  
+      </script>
+      
+    </body>
+    </html>
