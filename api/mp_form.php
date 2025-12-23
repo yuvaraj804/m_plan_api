@@ -1,6 +1,6 @@
 <?php
 session_start();
-// require_once 'bootstrap.php';
+require_once 'bootstrap.php';
  
 include 'mint_func.inc';
 
