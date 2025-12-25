@@ -54,9 +54,10 @@ try {
             if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
             // 1️⃣ Keep existing attachments (from hidden inputs)
+            $attachmentFiles = [];
             if (!empty($_POST['attach']) && is_array($_POST['attach'])) {
                 foreach ($_POST['attach'] as $old) {
-                    if (!empty($old)) $attachments[] = $old;
+                    if (!empty($old)) $attachmentFiles[] = $old;
                 }
             }
 
@@ -68,13 +69,13 @@ try {
                     $safeName = $filename;
                     $target = $uploadDir . $safeName;
                     if (move_uploaded_file($tmpName, $target)) {
-                        $attachments[] = $safeName;
+                        $attachmentFiles[] = $safeName;
                     }
                 }
             }
             // 3️⃣ Convert array → PostgreSQL format
-            $attachments = !empty($attachments)
-                ? '{' . implode(',', $attachments) . '}'
+            $attachments = !empty($attachmentFiles)
+                ? '{' . implode(',', $attachmentFiles) . '}'
                 : '{}'; // empty array fallback
 
 
@@ -99,6 +100,30 @@ try {
                 'attach_det'  => $attachments,
                 'euser_idf'   => $_SESSION['guser_id']  
             ]);
+
+            // Prepare and send notification email (non-blocking)
+            try {
+                $mailData = [
+                    'cref_no' => $_POST['request_id'],
+                    'desc_prob' => $_POST['issue_description'],
+                    'branch_code' => $_POST['branch_code'],
+                    'equ_code' => $_POST['equ_code'],
+                    'priority' => $_POST['priority'],
+                    'attachments' => $attachmentFiles
+                ];
+
+                if (function_exists('sendComplaintMail')) {
+                    $mailSent = sendComplaintMail($mailData);
+                    if (!$mailSent) {
+                        error_log('Complaint mail not sent for: ' . $_POST['request_id']);
+                    }
+                } else {
+                    // In case helper not loaded for some reason
+                    error_log('sendComplaintMail function not available.');
+                }
+            } catch (\Throwable $e) {
+                error_log('Mail send error: ' . $e->getMessage());
+            }
 
             echo json_encode([
                 'success' => true,

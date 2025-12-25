@@ -425,3 +425,168 @@ function convertToFrequencyCode($frequency) {
 
 
 ///////////////////////////////calculate next due End//////////////////////////////////////
+
+
+/**
+ * Send complaint notification email using PHPMailer.
+ * Accepts an associative array with keys: cref_no, desc_prob, branch_code, equ_code, priority, attachments (array of filenames)
+ * Returns true on success, false on failure.
+ */
+function sendComplaintMail(array $data) {
+    // require composer autoload if not already loaded (bootstrap usually loads it)
+    if (!class_exists('\PHPMailer\PHPMailer\PHPMailer')) {
+        $autoload = __DIR__ . '/vendor/autoload.php';
+        if (file_exists($autoload)) require_once $autoload;
+    }
+
+    // require mail config
+    if (file_exists(__DIR__ . '/mail_config.php')) include_once __DIR__ . '/mail_config.php';
+
+    try {
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+
+        // SMTP settings
+        $mail->isSMTP();
+        $mail->SMTPDebug = 0;
+        $mail->Debugoutput = 'html';
+        $mail->Host = defined('MAIL_HOST') ? MAIL_HOST : '';
+        $mail->Port = defined('MAIL_PORT') ? MAIL_PORT : 25;
+        if (defined('MAIL_SECURE') && MAIL_SECURE) $mail->SMTPSecure = MAIL_SECURE;
+        $mail->SMTPAuth = true;
+        $mail->Username = defined('MAIL_USERNAME') ? MAIL_USERNAME : '';
+        $mail->Password = defined('MAIL_PASSWORD') ? MAIL_PASSWORD : '';
+
+        // From / Reply
+        $mail->setFrom(defined('MAIL_FROM') ? MAIL_FROM : $mail->Username, defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : '');
+        if (defined('MAIL_CC') && MAIL_CC) $mail->addCC(MAIL_CC);
+        if (defined('MAIL_BCC') && MAIL_BCC) $mail->addBCC(MAIL_BCC);
+
+        // Recipients
+        if (defined('MAIL_TO')) {
+            $tos = getMailRecipients();
+            foreach ($tos as $t) $mail->addAddress($t);
+        }
+
+        $subject = (defined('MAIL_SUBJECT_PREFIX') ? MAIL_SUBJECT_PREFIX : '') . 'New Complaint: ' . ($data['cref_no'] ?? '');
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+
+        // Build HTML body
+        $body  = '<h3>New Complaint Raised</h3>';
+        $body .= '<table cellpadding="4">';
+        $body .= '<tr><td><strong>Request ID</strong></td><td>' . htmlspecialchars($data['cref_no'] ?? '') . '</td></tr>';
+        $body .= '<tr><td><strong>Branch</strong></td><td>' . htmlspecialchars($data['branch_code'] ?? '') . '</td></tr>';
+        $body .= '<tr><td><strong>Equipment</strong></td><td>' . htmlspecialchars($data['equ_code'] ?? '') . '</td></tr>';
+        $body .= '<tr><td><strong>Priority</strong></td><td>' . htmlspecialchars($data['priority'] ?? '') . '</td></tr>';
+        $body .= '<tr><td valign="top"><strong>Description</strong></td><td>' . nl2br(htmlspecialchars($data['desc_prob'] ?? '')) . '</td></tr>';
+        $body .= '</table>';
+
+        $mail->Body = $body;
+        $mail->AltBody = strip_tags($body);
+
+        // Attach files (if provided) - files are expected under uploads/request/
+        if (!empty($data['attachments']) && is_array($data['attachments'])) {
+            $uploadDir = __DIR__ . '/../uploads/request/';
+            foreach ($data['attachments'] as $fname) {
+                $path = $uploadDir . $fname;
+                if (file_exists($path)) {
+                    $mail->addAttachment($path, $fname);
+                }
+            }
+        }
+
+        $mail->send();
+        return true;
+
+    } catch (Exception $e) {
+        // log error and continue
+        error_log('Complaint mail error: ' . $e->getMessage());
+        return false;
+    }
+}
+
+
+/**
+ * Send work order notifications.
+ * $event: 'assigned' or 'closed'
+ * $data keys vary by event but may include: wo_id, ref_idf_inp, assign_to, task_des, attachments (array), compl_remarks, compl_dtime
+ */
+function sendWorkOrderMail(array $data, string $event = 'assigned') {
+    if (!class_exists('\PHPMailer\PHPMailer\PHPMailer')) {
+        $autoload = __DIR__ . '/vendor/autoload.php';
+        if (file_exists($autoload)) require_once $autoload;
+    }
+
+    if (file_exists(__DIR__ . '/mail_config.php')) include_once __DIR__ . '/mail_config.php';
+
+    try {
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+        $mail->isSMTP();
+        $mail->SMTPDebug = 0;
+        $mail->Debugoutput = 'html';
+        $mail->Host = defined('MAIL_HOST') ? MAIL_HOST : '';
+        $mail->Port = defined('MAIL_PORT') ? MAIL_PORT : 25;
+        if (defined('MAIL_SECURE') && MAIL_SECURE) $mail->SMTPSecure = MAIL_SECURE;
+        $mail->SMTPAuth = true;
+        $mail->Username = defined('MAIL_USERNAME') ? MAIL_USERNAME : '';
+        $mail->Password = defined('MAIL_PASSWORD') ? MAIL_PASSWORD : '';
+
+        $mail->setFrom(defined('MAIL_FROM') ? MAIL_FROM : $mail->Username, defined('MAIL_FROM_NAME') ? MAIL_FROM_NAME : '');
+        if (defined('MAIL_CC') && MAIL_CC) $mail->addCC(MAIL_CC);
+        if (defined('MAIL_BCC') && MAIL_BCC) $mail->addBCC(MAIL_BCC);
+
+        // Recipients
+        if (defined('MAIL_TO')) {
+            $tos = getMailRecipients();
+            foreach ($tos as $t) $mail->addAddress($t);
+        }
+        // Optionally add assignee email if provided
+        if (!empty($data['assign_email'])) {
+            $mail->addAddress($data['assign_email']);
+        }
+
+        $wo = $data['wo_id'] ?? '';
+        $subjectPrefix = (defined('MAIL_SUBJECT_PREFIX') ? MAIL_SUBJECT_PREFIX : '');
+        if ($event === 'assigned') {
+            $mail->Subject = $subjectPrefix . 'Work Order Assigned: ' . $wo;
+            $body  = '<h3>Work Order Assigned</h3>';
+        } else {
+            $mail->Subject = $subjectPrefix . 'Work Order Closed: ' . $wo;
+            $body  = '<h3>Work Order Closed</h3>';
+        }
+
+        $body .= '<table cellpadding="4">';
+        $body .= '<tr><td><strong>WO ID</strong></td><td>' . htmlspecialchars($wo) . '</td></tr>';
+        $body .= '<tr><td><strong>Request</strong></td><td>' . htmlspecialchars($data['ref_idf_inp'] ?? '') . '</td></tr>';
+        $body .= '<tr><td><strong>Equipment</strong></td><td>' . htmlspecialchars($data['equ_code'] ?? '') . '</td></tr>';
+        $body .= '<tr><td><strong>Assigned To</strong></td><td>' . htmlspecialchars($data['assign_to'] ?? '') . '</td></tr>';
+        $body .= '<tr><td valign="top"><strong>Task</strong></td><td>' . nl2br(htmlspecialchars($data['task_des'] ?? '')) . '</td></tr>';
+        if ($event === 'closed') {
+            $body .= '<tr><td><strong>Completion Date</strong></td><td>' . htmlspecialchars($data['compl_dtime'] ?? '') . '</td></tr>';
+            $body .= '<tr><td valign="top"><strong>Remarks</strong></td><td>' . nl2br(htmlspecialchars($data['compl_remarks'] ?? '')) . '</td></tr>';
+        }
+        $body .= '</table>';
+
+        $mail->isHTML(true);
+        $mail->Body = $body;
+        $mail->AltBody = strip_tags($body);
+
+        // Attachments (uploads/workorder/)
+        if (!empty($data['attachments']) && is_array($data['attachments'])) {
+            $uploadDir = __DIR__ . '/../uploads/workorder/';
+            foreach ($data['attachments'] as $fname) {
+                $path = $uploadDir . $fname;
+                if (file_exists($path)) {
+                    $mail->addAttachment($path, $fname);
+                }
+            }
+        }
+
+        $mail->send();
+        return true;
+
+    } catch (Exception $e) {
+        error_log('Workorder mail error: ' . $e->getMessage());
+        return false;
+    }
+}

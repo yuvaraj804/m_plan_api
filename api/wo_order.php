@@ -97,6 +97,24 @@ try {
             'euser_idf'   => $_SESSION['guser_id']
         ]);
 
+        // Send assignment email (best-effort)
+        try {
+            $mailData = [
+                'wo_id' => $wo_id,
+                'ref_idf_inp' => $ref_idf_inp,
+                'equ_code' => $_POST['equ_code'] ?? '',
+                'assign_to' => $_POST['assign_to'] ?? '',
+                'task_des' => $_POST['task_des'] ?? '',
+                'attachments' => $saved ?? []
+            ];
+            if (function_exists('sendWorkOrderMail')) {
+                $sent = sendWorkOrderMail($mailData, 'assigned');
+                if (!$sent) error_log('WO assign mail failed for WO ' . $wo_id);
+            }
+        } catch (\Throwable $e) {
+            error_log('WO mail error: ' . $e->getMessage());
+        }
+
         echo json_encode([
             'success' => true,
             'message' => 'Work Order Created Successfully',
@@ -192,16 +210,16 @@ try {
         $uploadDir = __DIR__ . '/../uploads/workorder/';
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
         
+        $savedCompl = [];
         if (!empty($_FILES['compl_attachment']['name'][0])) {
-            $saved = [];
             foreach ($_FILES['compl_attachment']['name'] as $i => $f) {
                 $safe =  $f;
                 $path = $uploadDir . $safe;
                 if (move_uploaded_file($_FILES['compl_attachment']['tmp_name'][$i], $path)) {
-                    $saved[] = $safe;
+                    $savedCompl[] = $safe;
                 }
             }
-            $compl_attach_det = '{' . implode(',', $saved) . '}';
+            if (!empty($savedCompl)) $compl_attach_det = '{' . implode(',', $savedCompl) . '}';
         }
         $conn->beginTransaction();
 
@@ -238,6 +256,25 @@ try {
         // }
 
         $conn->commit();
+
+        // Send closure email (best-effort)
+        try {
+            $mailData = [
+                'wo_id' => $wo_id,
+                'ref_idf_inp' => $_POST['ref_idf'] ?? '',
+                'equ_code' => $_POST['equ_code'] ?? '',
+                'compl_remarks' => $compl_remarks,
+                'compl_dtime' => $compl_dtime ? $compl_dtime->format('Y-m-d') : '',
+                'attachments' => $savedCompl
+            ];
+            if (function_exists('sendWorkOrderMail')) {
+                $sent = sendWorkOrderMail($mailData, 'closed');
+                if (!$sent) error_log('WO close mail failed for WO ' . $wo_id);
+            }
+        } catch (\Throwable $e) {
+            error_log('WO close mail error: ' . $e->getMessage());
+        }
+
         json_response(true, ['wo_id' => $wo_id], 'Work Order Closed');
     }
     elseif ($action === 'del') {
