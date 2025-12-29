@@ -3,6 +3,7 @@ session_start();
 
 include 'mint_func.inc';
 require_once 'bootstrap.php'; 
+//  require_once '/var/www/extreme.minervaerp.com/public_html/minerva_erp_v14_dev/includes/doc_dbal_config.php';
    
 
 header('Content-Type: application/json');
@@ -59,7 +60,7 @@ try {
 
         // 🔸 Handle attachments (optional)
         $attachments = null;
-        $uploadDir = __DIR__ . '/uploads/workorder/';
+        $uploadDir = __DIR__ . '/../uploads/workorder/';
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
         if (!empty($_FILES['attachment']['name'][0])) {
@@ -98,22 +99,42 @@ try {
         ]);
 
         // Send assignment email (best-effort)
+        require_once __DIR__ . '/phpmailer/mail_config.php';
+        require_once __DIR__ . '/mint_func.inc';
+
         try {
             $mailData = [
-                'wo_id' => $wo_id,
-                'ref_idf_inp' => $ref_idf_inp,
-                'equ_code' => $_POST['equ_code'] ?? '',
-                'assign_to' => $_POST['assign_to'] ?? '',
-                'task_des' => $_POST['task_des'] ?? '',
-                'attachments' => $saved ?? []
+                'wo_id'         => $wo_id,
+                'ref_idf_inp'   => $ref_idf_inp,
+                'equ_code'      => $_POST['equ_code'] ?? '',
+                'assign_to'     => $_POST['assign_to'] ?? '',
+                'task_des'      => $_POST['task_des'] ?? '',
+                'attachments'   => $saved ?? []
             ];
-            if (function_exists('sendWorkOrderMail')) {
-                $sent = sendWorkOrderMail($mailData, 'assigned');
-                if (!$sent) error_log('WO assign mail failed for WO ' . $wo_id);
+        
+            if (function_exists('buildWorkOrderAssignHtml') && function_exists('sendMail')) {
+        
+                // 1️⃣ Build HTML
+                $htmlBody = buildWorkOrderAssignHtml($mailData);
+        
+                // 2️⃣ Subject
+                $subject = '[MINT] Work Order Assigned: ' . $wo_id;
+        
+                // 3️⃣ Send mail
+                $sent = sendMail($htmlBody, $subject);
+        
+                if (!$sent) {
+                    error_log('WO assign mail failed for WO ' . $wo_id);
+                }
+        
+            } else {
+                error_log('Mail functions not available.');
             }
+        
         } catch (\Throwable $e) {
             error_log('WO mail error: ' . $e->getMessage());
         }
+        
 
         echo json_encode([
             'success' => true,
@@ -258,19 +279,35 @@ try {
         $conn->commit();
 
         // Send closure email (best-effort)
-        try {
-            $mailData = [
-                'wo_id' => $wo_id,
-                'ref_idf_inp' => $_POST['ref_idf'] ?? '',
-                'equ_code' => $_POST['equ_code'] ?? '',
-                'compl_remarks' => $compl_remarks,
-                'compl_dtime' => $compl_dtime ? $compl_dtime->format('Y-m-d') : '',
-                'attachments' => $savedCompl
-            ];
-            if (function_exists('sendWorkOrderMail')) {
-                $sent = sendWorkOrderMail($mailData, 'closed');
-                if (!$sent) error_log('WO close mail failed for WO ' . $wo_id);
-            }
+        require_once __DIR__ . '/PHPMailer/mail_config.php';
+        require_once __DIR__ . '/mint_func.inc';
+      
+   try {
+    $mailData = [
+        'wo_id'          => $wo_id ?? '',
+        'ref_idf_inp'    => $_POST['ref_idf'] ?? '',
+        'equ_code'       => $_POST['equ_code'] ?? '',
+        'compl_remarks'  => $compl_remarks ?? '',
+        'compl_dtime'    => ($compl_dtime instanceof DateTime)
+                            ? $compl_dtime->format('Y-m-d')
+                            : '',
+        'attachments'    => is_array($savedCompl) ? $savedCompl : []
+    ];
+
+    if (function_exists('buildWorkOrderClosedHtml')) {
+        $htmlBody = buildWorkOrderClosedHtml($mailData);
+            
+        // 2️⃣ Subject
+        $subject = '[MINT] New Work Order Close: ' . $_POST['wo_id'];
+        $mailSent = sendMail($htmlBody, $subject);
+
+        if ($mailSent !== true) {
+            error_log('[MAIL] WO close mail failed | WO_ID: ' . $wo_id);
+        }
+    } else {
+        error_log('[MAIL] buildWorkOrderClosedHtml() not found | WO_ID: ' . $wo_id);
+    }
+
         } catch (\Throwable $e) {
             error_log('WO close mail error: ' . $e->getMessage());
         }

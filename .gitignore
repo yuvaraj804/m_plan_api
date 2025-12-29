@@ -1,2 +1,4 @@
 api/vendor/
+api/PHPMailer/
 uploads/
+dash.html

@@ -11,6 +11,6 @@
         "doctrine/orm": "2.20",
         "symfony/cache": "^6.0",
         "psr/cache": "^3.0",
-        "phpmailer/phpmailer": "^6.8"
+        "phpmailer/phpmailer": "^7.0"
     }
-} 
+}

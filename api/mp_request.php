@@ -3,6 +3,7 @@ session_start();
 
 include 'mint_func.inc';
 require_once 'bootstrap.php'; 
+//  require_once '/var/www/extreme.minervaerp.com/public_html/minerva_erp_v14_dev/includes/doc_dbal_config.php';
 
 
 header('Content-Type: application/json');
@@ -101,34 +102,49 @@ try {
                 'euser_idf'   => $_SESSION['guser_id']  
             ]);
 
-            // Prepare and send notification email (non-blocking)
+            // Prepare and send notification email
+            require_once __DIR__ . '/PHPMailer/mail_config.php';
+            require_once __DIR__ . '/mint_func.inc';
+            $mailSent = false;  
             try {
                 $mailData = [
-                    'cref_no' => $_POST['request_id'],
-                    'desc_prob' => $_POST['issue_description'],
-                    'branch_code' => $_POST['branch_code'],
-                    'equ_code' => $_POST['equ_code'],
-                    'priority' => $_POST['priority'],
-                    'attachments' => $attachmentFiles
+                    'cref_no'       => $_POST['request_id'],
+                    'desc_prob'     => $_POST['issue_description'],
+                    'branch_code'   => $_POST['branch_code'],
+                    'equ_code'      => $_POST['equ_code'],
+                    'priority'      => $_POST['priority'],
+                    'attachments'   => $attachmentFiles
                 ];
-
-                if (function_exists('sendComplaintMail')) {
-                    $mailSent = sendComplaintMail($mailData);
+            
+                if (function_exists('buildComplaintHtml') && function_exists('sendMail')) {
+            
+                    // 1️⃣ Build HTML
+                    $htmlBody = buildComplaintHtml($mailData);
+            
+                    // 2️⃣ Subject
+                    $subject = '[MINT] New Complaint: ' . $_POST['request_id'];
+            
+                    // 3️⃣ Send mail
+                    $mailSent = sendMail($htmlBody, $subject);
+            
                     if (!$mailSent) {
                         error_log('Complaint mail not sent for: ' . $_POST['request_id']);
                     }
+            
                 } else {
-                    // In case helper not loaded for some reason
-                    error_log('sendComplaintMail function not available.');
+                    error_log('Mail functions not available.');
                 }
+            
             } catch (\Throwable $e) {
                 error_log('Mail send error: ' . $e->getMessage());
             }
+            
 
             echo json_encode([
                 'success' => true,
-                'message' => 'Complaint Registered Successfully'
-            ]);
+                'message' => 'Complaint Registered Successfully',
+                 'message' => $mailSent    ? 'Complaint Registered & Mail Sent' : 'Complaint Registered (Mail Failed)'
+        ]);
         }
 
         elseif ($action === 'edit') {

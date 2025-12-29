@@ -1,9 +1,11 @@
 <?php
 include 'mint_func.inc';
 
-require_once 'bootstrap.php'; 
-  // defines $entityManager
+//  require_once '/var/www/extreme.minervaerp.com/public_html/minerva_erp_v14_dev/includes/doc_dbal_config.php';
+ require_once 'bootstrap.php'; 
 
+// ini_set('display_errors', 1);
+// error_reporting(E_ALL);
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
