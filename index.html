@@ -1170,12 +1170,41 @@
     }
     
     function loadDashboardData() {
-      setTimeout(() => {
-        document.getElementById('activePlans').textContent = '15';
-        document.getElementById('openRequests').textContent = '8';
-        document.getElementById('workOrders').textContent = '12';
-        document.getElementById('completed').textContent = '42';
-      }, 500);
+      const activeEl = document.getElementById('activePlans');
+      const openEl   = document.getElementById('openRequests');
+      const workEl   = document.getElementById('workOrders');
+      const compEl   = document.getElementById('completed');
+
+      // show temporary placeholder
+      activeEl.textContent = '...';
+      openEl.textContent   = '...';
+      workEl.textContent   = '...';
+      compEl.textContent   = '...';
+
+      fetch('./api/dashboard_counts.php')
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.success && data.counts) {
+            activeEl.textContent = data.counts.activePlans ?? '0';
+            openEl.textContent   = data.counts.openRequests ?? '0';
+            workEl.textContent   = data.counts.workOrders ?? '0';
+            compEl.textContent   = data.counts.completed ?? '0';
+          } else {
+            // fallback to defaults
+            activeEl.textContent = '15';
+            openEl.textContent   = '8';
+            workEl.textContent   = '12';
+            compEl.textContent   = '42';
+          }
+        })
+        .catch(err => {
+          console.error('Failed to load dashboard counts', err);
+          // fallback to defaults
+          activeEl.textContent = '15';
+          openEl.textContent   = '8';
+          workEl.textContent   = '12';
+          compEl.textContent   = '42';
+        });
     }
     
     // Initialize on page load
